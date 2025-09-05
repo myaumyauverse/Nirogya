@@ -5,12 +5,12 @@ import { SOCIALS } from '@/constants'
 
 const Footer = () => {
   return (
-    <footer className="bg-primary-700 py-16">
+    <footer className="bg-primary-500 py-16">
       <div className="max-container padding-container">
         <div className="text-left mb-12">
           {/* Logo and Description */}
           <Link href="/" className="mb-6 inline-block">
-            <Image src="/hilink-logo.svg" alt="Waterborne Disease Awareness" width={74} height={29} />
+            <Image src="/hilink-logo.svg" alt="Waterborne Disease Awareness" width={150} height={80} />
           </Link>
           <p className="regular-16 text-primary-100 mb-8 max-w-2xl leading-relaxed">
             Dedicated to raising awareness about waterborne diseases and promoting
@@ -30,7 +30,7 @@ const Footer = () => {
         <div className="border-t border-primary-600 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="regular-14 text-primary-200">
-              © 2025 Waterborne Disease Awareness - Northeast India. All rights reserved.
+              © 2025 Nirogya - Northeast India. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link href="/" className="regular-14 text-primary-200 hover:text-white transition-colors">

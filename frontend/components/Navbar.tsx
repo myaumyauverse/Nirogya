@@ -14,7 +14,7 @@ const Navbar = () => {
       transition={{ duration: 0.6 }}
     >
         <Link href="/" className="hover:opacity-80 transition-opacity">
-            <Image src="hilink-logo.svg" alt="logo" width={74} height={29}></Image>
+            <Image src="hilink-logo.svg" alt="logo" width={150} height={80}></Image>
         </Link>
 
         <ul className="hidden h-full gap-12 lg:flex">
