@@ -1,14 +1,29 @@
 #!/usr/bin/env python3
 """
-Quick Disease Prediction - Command Line Interface
-================================================
+Quick Disease Outbreak Prediction Tool
+=====================================
+Command-line tool for rapid disease outbreak predictions using trained ML models.
 
-Simple command-line tool for quick disease outbreak predictions.
-Usage: python quick_predict.py [options]
+Usage: 
+  python quick_predict.py --deaths 5 --state 1 --month 7
+  python quick_predict.py --interactive
+  python quick_predict.py --info
+
+Features:
+  - Single outbreak prediction
+  - Batch prediction from CSV
+  - Interactive mode
+  - Disease type classification
+  - Risk assessment and recommendations
 """
 
-import argparse
 import sys
+import os
+import argparse
+
+# Add the current directory to Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from disease_prediction_service import DiseasePredictor
 
 
