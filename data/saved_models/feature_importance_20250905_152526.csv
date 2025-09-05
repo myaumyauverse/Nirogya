@@ -1,0 +1,53 @@
+feature,importance
+Cases_Rolling_Mean_2,0.4799316570738722
+Cases_Diff_1,0.2508869098889762
+Cases_Rolling_Mean_3,0.15122549488157633
+Source_Table,0.04168384266556723
+Reporting_Month,0.02385487185333315
+Cases_Diff_2,0.021839725013415648
+Cases_Lag_1,0.010210431569488103
+Death_Ratio,0.009602155964059247
+District_Encoded,0.005900736031127366
+Start_of_Outbreak_Month,0.001146135422480789
+Cases_Lag_3,0.000818756171332699
+ID,0.0008015814323412246
+Cases_Lag_2,0.0005628011555463797
+Reporting_Year,0.0004631234576220799
+No_of_Deaths,0.00045737634572929324
+Start_of_Outbreak_Year,0.0003651188558804139
+Current_Status_Under Surveillance,8.017246591383356e-05
+Disease_Illness_Food Poisoning,5.8791454558727674e-05
+Current_Status_Under Control,3.894586936051369e-05
+Disease_Illness_Acute Diarrheal Diseases,3.80377271482313e-05
+Disease_Illness_Cholera,1.7177011658590233e-05
+Current_Status_Under Investigation,7.052832978784035e-06
+Disease_Illness_Acute Gastroenteritis,2.3267811497395157e-06
+Disease_Illness_Typhoid,1.9048323414302598e-06
+State_UT_Mizoram,1.6907194378949586e-06
+State_UT_Assam,1.0972570119803888e-06
+Disease_Illness_Hepatitis A,9.75717010873612e-07
+Disease_Illness_Dysentery,5.763735289039437e-07
+High_Mortality,2.6106032347839716e-07
+Current_Status_Under control,9.02372742205353e-08
+Disease_Illness_Suspected Typhoid,7.62307436779271e-08
+State_UT_Meghalaya,5.795429363389981e-08
+Has_Deaths,2.9450974283181774e-08
+Disease_Illness_Acute Diarrheal Disease (Shigella),1.8241942865688054e-08
+Northeast_State,0.0
+Reporting_Season,0.0
+Disease_Illness_Bacillary Dysentery,0.0
+Disease_Illness_Acute Diarrhoeal Disease,0.0
+Disease_Illness_Acute Diarrhoeal Diarrhoea,0.0
+State_UT_Tripura,0.0
+Start_of_Outbreak_Season,0.0
+Disease_Illness_Dysentery (Shigella),0.0
+Disease_Illness_Food poisoning,0.0
+Disease_Illness_Suspected Food Poisoning,0.0
+Disease_Illness_Viral Hepatitis A,0.0
+Disease_Illness_Food Poisoning (Mushroom Poisoning),0.0
+Is_Monsoon_Season,0.0
+Is_Peak_Monsoon,0.0
+Is_Winter,0.0
+Is_Post_Monsoon,0.0
+Is_Pre_Monsoon,0.0
+Zero_Mortality,0.0

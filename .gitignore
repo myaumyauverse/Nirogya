@@ -59,6 +59,13 @@ data/water\ data/
 .ipynb_checkpoints/
 */.ipynb_checkpoints/
 
+# Python cache files
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
 # IDE and editor files
 .vscode/
 .idea/
