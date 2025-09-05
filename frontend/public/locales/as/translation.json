@@ -1,0 +1,41 @@
+{
+  "doctor_login": {
+    "title": "ডাক্তৰ লগইন",
+    "subtitle": "আউটব্ৰেক নিৰীক্ষণ আৰু ভৱিষ্যদ্বাণী কৰিবলৈ আপোনাৰ ডেছবৰ্ড এক্সেচ কৰক।",
+    "email_label": "ইমেইল ঠিকনা",
+    "password_label": "পাছৱৰ্ড",
+    "login_button": "ডেছবৰ্ডলৈ লগইন কৰক"
+  },
+  "doctor_dashboard": {
+    "title": "ডাক্তৰৰ ডেছবৰ্ড"
+  },
+  "prediction": {
+    "title": "নতুন ঘটনাৰ ভৱিষ্যদ্বাণী কৰক",
+    "cases_label": "ঘটনাৰ সংখ্যা",
+    "state_label": "ৰাজ্য",
+    "month_label": "মাহ (১-১২)",
+    "ph_label": "pH",
+    "do_label": "দ্ৰৱীভূত অক্সিজেন",
+    "bod_label": "BOD",
+    "nitrate_label": " নাইট্ৰেট-N",
+    "fecal_coliform_label": "মলৰ কলিফৰ্ম",
+    "total_coliform_label": "মুঠ কলিফৰ্ম",
+    "temp_label": "তাপমাত্ৰা (°C)",
+    "predict_button": "ঘটনাৰ ভৱিষ্যদ্বাণী কৰক",
+    "predicting_button": "ভৱিষ্যদ্বাণী কৰি আছে...",
+    "results_title": "ভৱিষ্যদ্বাণীৰ ফলাফল",
+    "error": "ভৱিষ্যদ্বাণী મેળવવામાં విఫలమైంది. దయచేసి API সার্ভাৰ আৰু আপোনাৰ ইনপুট перевірте।"
+  },
+  "record_book": {
+    "title": "ৰেকৰ্ড বুক",
+    "search_placeholder": "ৰোগৰ দ্বাৰা সন্ধান কৰক...",
+    "disease_header": "ৰোগ",
+    "state_header": "ৰাজ্য",
+    "cases_header": "ঘটনা",
+    "deaths_header": "মৃত্যু",
+    "year_header": "বছৰ"
+  },
+  "navbar": {
+    "doctor_login": "ডাক্তৰ লগইন"
+  }
+}

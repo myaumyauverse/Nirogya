@@ -4,8 +4,16 @@ import { NAV_LINKS } from "@/constants"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from 'framer-motion'
+import Button from "./Button"
+import { useTranslation } from "react-i18next"
 
 const Navbar = () => {
+  const { t, i18n } = useTranslation()
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng)
+  }
+
   return (
     <motion.nav
       className="bg-white/90 backdrop-blur-md border-b-2 border-primary-200 flexBetween max-container padding-container relative z-30 py-5 shadow-sm"
@@ -32,10 +40,21 @@ const Navbar = () => {
             ))}
         </ul>
 
-        <Image src="menu.svg" alt="menu" width={32} height={32} className="inline-block cursor-pointer lg:hidden hover:opacity-70 transition-opacity">
+        <div className="lg:flexCenter hidden">
+          <Link href="/doctor/login">
+            <Button
+              type="button"
+              title={t('navbar.doctor_login')}
+              variant="btn_primary"
+            />
+          </Link>
+          <div className="ml-4 flex gap-2">
+            <button onClick={() => changeLanguage('en')} className="text-sm font-bold text-gray-90">EN</button>
+            <button onClick={() => changeLanguage('as')} className="text-sm font-bold text-gray-50">AS</button>
+          </div>
+        </div>
 
-        </Image>
-
+        <Image src="menu.svg" alt="menu" width={32} height={32} className="inline-block cursor-pointer lg:hidden hover:opacity-70 transition-opacity" />
     </motion.nav>
   )
 }
