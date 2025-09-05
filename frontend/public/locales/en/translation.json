@@ -1,0 +1,41 @@
+{
+  "doctor_login": {
+    "title": "Doctor Login",
+    "subtitle": "Access your dashboard to monitor and predict outbreaks.",
+    "email_label": "Email Address",
+    "password_label": "Password",
+    "login_button": "Login to Dashboard"
+  },
+  "doctor_dashboard": {
+    "title": "Doctor's Dashboard"
+  },
+  "prediction": {
+    "title": "Predict New Cases",
+    "cases_label": "Number of Cases",
+    "state_label": "State",
+    "month_label": "Month (1-12)",
+    "ph_label": "pH",
+    "do_label": "Dissolved Oxygen",
+    "bod_label": "BOD",
+    "nitrate_label": "Nitrate-N",
+    "fecal_coliform_label": "Fecal Coliform",
+    "total_coliform_label": "Total Coliform",
+    "temp_label": "Temperature (°C)",
+    "predict_button": "Predict Cases",
+    "predicting_button": "Predicting...",
+    "results_title": "Prediction Results",
+    "error": "Failed to get prediction. Please check the API server and your inputs."
+  },
+  "record_book": {
+    "title": "Record Book",
+    "search_placeholder": "Search by disease...",
+    "disease_header": "Disease",
+    "state_header": "State",
+    "cases_header": "Cases",
+    "deaths_header": "Deaths",
+    "year_header": "Year"
+  },
+  "navbar": {
+    "doctor_login": "Doctor Login"
+  }
+}
