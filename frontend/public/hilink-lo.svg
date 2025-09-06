@@ -1,0 +1,14 @@
+<svg width="400" height="100" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .black-text { fill: #2c2c2c; font-family: 'Times New Roman', serif; font-weight: normal; }
+      .orange-text { fill: #ff7f47; font-family: 'Times New Roman', serif; font-weight: normal; }
+    </style>
+  </defs>
+  
+  <!-- Black letters: N, I -->
+  <text x="20" y="70" font-size="72" class="black-text">NI</text>
+  
+  <!-- Orange letters: R, O, G, Y, A -->
+  <text x="88" y="70" font-size="72" class="orange-text">ROGYA</text>
+</svg>

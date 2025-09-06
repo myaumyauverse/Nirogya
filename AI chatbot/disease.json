@@ -1,0 +1,258 @@
+{
+  "diseases": [
+    {
+      "name": "giardiasis",
+      "description": "Giardiasis is an intestinal infection caused by the parasite Giardia lamblia (also known as Giardia duodenalis or Giardia intestinalis). It is one of the most common waterborne parasitic infections worldwide.",
+      "transmission": "Contaminated water, person-to-person contact, contaminated food, poor sanitation, recreational water activities",
+      "severity": "Usually mild to moderate, can become chronic if untreated",
+      "treatment": "Metronidazole (flagyl), tinidazole, nitazoxanide, albendazole. Treatment duration typically 5-10 days. Supportive care with fluid replacement.",
+      "prevention": "Boil water for 1 minute, avoid swallowing recreational water, practice good hand hygiene, avoid ice from unknown sources, peel fruits yourself",
+      "region_specific_info": "Common during monsoon season in Northeast India. Higher risk in areas with poor sanitation. Available treatment at district hospitals and PHCs.",
+      "symptoms": [
+        "watery diarrhea", "stomach cramps", "bloating", "nausea", "foul-smelling stools", 
+        "gas", "dehydration", "weight loss", "abdominal pain", "fatigue", "greasy stools",
+        "loss of appetite", "vomiting", "flatulence", "malabsorption"
+      ]
+    },
+    {
+      "name": "cryptosporidiosis",
+      "description": "Cryptosporidiosis is a diarrheal disease caused by microscopic parasites of the genus Cryptosporidium. It can cause severe dehydration and is particularly dangerous for immunocompromised individuals.",
+      "transmission": "Contaminated water, swimming pools, contaminated food, person-to-person contact, animal contact",
+      "severity": "Mild to severe, potentially life-threatening in immunocompromised patients",
+      "treatment": "Nitazoxanide for immunocompetent patients. Supportive care with oral rehydration therapy. No specific treatment for immunocompromised patients - focus on immune system support.",
+      "prevention": "Boil water before drinking, avoid swallowing pool/lake water, wash hands frequently, avoid contact with infected animals, practice food safety",
+      "region_specific_info": "Resistance to chlorine makes it persistent in water supplies. Outbreaks reported during monsoon in Northeast India. Seek immediate medical attention if symptoms persist.",
+      "symptoms": [
+        "profuse watery diarrhea", "stomach cramps", "dehydration", "nausea", "vomiting", 
+        "fever", "weight loss", "loss of appetite", "abdominal pain", "malaise", "headache",
+        "muscle aches", "low-grade fever", "urgency to defecate"
+      ]
+    },
+    {
+      "name": "shigellosis",
+      "description": "Shigellosis is an infectious disease caused by Shigella bacteria. It primarily affects the large intestine and causes severe diarrhea, often with blood and mucus.",
+      "transmission": "Contaminated water, person-to-person contact, contaminated food, poor sanitation, flies carrying bacteria",
+      "severity": "Moderate to severe, can cause complications like hemolytic uremic syndrome",
+      "treatment": "Antibiotics (ciprofloxacin, azithromycin, ceftriaxone), fluid replacement therapy, avoid anti-diarrheal medications",
+      "prevention": "Safe drinking water, hand hygiene, proper food handling, improved sanitation, fly control measures",
+      "region_specific_info": "Endemic in Northeast India with seasonal peaks during monsoon. Higher transmission in crowded areas. Treatment available at government health facilities.",
+      "symptoms": [
+        "bloody diarrhea", "mucus in stool", "severe abdominal cramps", "fever", "tenesmus", 
+        "urgency to defecate", "nausea", "vomiting", "dehydration", "headache", "myalgia",
+        "rectal pain", "frequent small volume stools", "pus in stool"
+      ]
+    },
+    {
+      "name": "campylobacteriosis",
+      "description": "Campylobacteriosis is one of the most common bacterial causes of gastroenteritis, caused by Campylobacter jejuni and other Campylobacter species.",
+      "transmission": "Contaminated water, undercooked poultry, unpasteurized milk, contaminated food, contact with infected animals",
+      "severity": "Usually self-limiting, but can cause serious complications like Guillain-Barré syndrome",
+      "treatment": "Usually self-limiting. Antibiotics (erythromycin, azithromycin, fluoroquinolones) for severe cases or high-risk patients. Supportive care with fluids.",
+      "prevention": "Cook poultry thoroughly, pasteurized dairy products, safe water, hand hygiene, avoid cross-contamination",
+      "region_specific_info": "Common in rural areas of Northeast India. Associated with backyard poultry farming. Seasonal increase during warm months.",
+      "symptoms": [
+        "diarrhea", "cramping", "abdominal pain", "fever", "nausea", "headache", "muscle pain",
+        "bloody stools", "vomiting", "malaise", "dehydration", "loss of appetite", "fatigue"
+      ]
+    },
+    {
+      "name": "amoebiasis",
+      "description": "Amoebiasis is an infection caused by the protozoan parasite Entamoeba histolytica. It can cause both intestinal and extraintestinal complications.",
+      "transmission": "Contaminated water, contaminated food, person-to-person contact, poor sanitation",
+      "severity": "Can range from asymptomatic to severe with life-threatening complications",
+      "treatment": "Metronidazole followed by paromomycin or iodoquinol to eliminate cysts. Treatment duration 7-10 days for tissue infection plus luminal agent.",
+      "prevention": "Safe drinking water, proper sanitation, hand hygiene, avoid raw vegetables in endemic areas, food safety measures",
+      "region_specific_info": "Endemic in Northeast India with higher prevalence in rural areas. Liver abscess complications require specialized treatment at district/medical college hospitals.",
+      "symptoms": [
+        "bloody diarrhea", "abdominal cramps", "colicky pain", "mucus in stool", "dysentery", 
+        "weight loss", "fever", "nausea", "flatulence", "tenesmus", "rectal bleeding",
+        "right upper quadrant pain", "liver tenderness", "anemia"
+      ]
+    },
+    {
+      "name": "rotavirus_infection",
+      "description": "Rotavirus is the leading cause of severe diarrhea among infants and young children worldwide. It causes significant morbidity and mortality in developing countries.",
+      "transmission": "Fecal-oral route, contaminated water, contaminated surfaces, person-to-person contact",
+      "severity": "Can be severe in children under 5 years, leading to severe dehydration and death if untreated",
+      "treatment": "Supportive care with oral rehydration therapy, zinc supplementation, continued feeding. No specific antiviral treatment available.",
+      "prevention": "Rotavirus vaccination, safe water, hand hygiene, breastfeeding, improved sanitation",
+      "region_specific_info": "Major cause of childhood diarrhea in Northeast India. Vaccination available under government immunization program. Peak season during cooler months.",
+      "symptoms": [
+        "severe watery diarrhea", "vomiting", "fever", "dehydration", "abdominal pain", 
+        "irritability", "loss of appetite", "lethargy", "dry mouth", "decreased urination",
+        "sunken eyes", "skin tenting", "rapid heart rate"
+      ]
+    },
+    {
+      "name": "norovirus_infection",
+      "description": "Norovirus is a highly contagious virus that causes gastroenteritis. It is often called the 'winter vomiting bug' and can cause large outbreaks.",
+      "transmission": "Contaminated water, contaminated food, person-to-person contact, contaminated surfaces, airborne transmission",
+      "severity": "Usually mild and self-limiting, but can cause severe dehydration in vulnerable populations",
+      "treatment": "Supportive care with fluid replacement, oral rehydration therapy. No specific antiviral treatment. Avoid dairy and fatty foods initially.",
+      "prevention": "Hand hygiene, safe water, proper food handling, surface disinfection, isolation of infected individuals",
+      "region_specific_info": "Outbreaks common in schools and communities in Northeast India. Highly infectious - strict hygiene measures needed. Usually resolves in 1-3 days.",
+      "symptoms": [
+        "sudden onset vomiting", "watery diarrhea", "nausea", "stomach cramps", "low-grade fever",
+        "headache", "muscle aches", "fatigue", "chills", "dehydration", "loss of appetite"
+      ]
+    },
+    {
+      "name": "escherichia_coli_infection",
+      "description": "E. coli infection, particularly by enterotoxigenic E. coli (ETEC) and enteropathogenic E. coli (EPEC), is a major cause of traveler's diarrhea and childhood diarrhea.",
+      "transmission": "Contaminated water, undercooked meat, contaminated vegetables, person-to-person contact",
+      "severity": "Usually mild to moderate, but some strains like E. coli O157:H7 can cause severe complications",
+      "treatment": "Supportive care with fluids. Antibiotics usually not recommended as they may increase toxin production. Oral rehydration therapy essential.",
+      "prevention": "Safe water, proper food handling, cook meat thoroughly, wash vegetables, hand hygiene",
+      "region_specific_info": "Common cause of traveler's diarrhea in Northeast India. Street food consumption increases risk. Avoid antibiotics unless specifically indicated.",
+      "symptoms": [
+        "watery diarrhea", "abdominal cramps", "nausea", "vomiting", "low-grade fever",
+        "dehydration", "urgency", "bloody diarrhea", "severe abdominal pain", "fatigue"
+      ]
+    },
+    {
+      "name": "salmonellosis",
+      "description": "Salmonellosis is a foodborne and waterborne illness caused by Salmonella bacteria (non-typhoidal). It causes gastroenteritis and can lead to bacteremia.",
+      "transmission": "Contaminated water, contaminated food (especially eggs, poultry, meat), person-to-person contact, contact with infected animals",
+      "severity": "Usually self-limiting, but can cause severe illness in immunocompromised individuals",
+      "treatment": "Supportive care with fluids. Antibiotics only for severe cases or high-risk patients (ciprofloxacin, azithromycin, ceftriaxone).",
+      "prevention": "Safe food handling, cook eggs and meat thoroughly, pasteurized products, safe water, hand hygiene",
+      "region_specific_info": "Endemic in Northeast India with seasonal peaks. Associated with consumption of contaminated water and street food. Avoid unnecessary antibiotic use.",
+      "symptoms": [
+        "diarrhea", "fever", "vomiting", "abdominal cramps", "headache", "nausea", "chills",
+        "muscle aches", "dehydration", "bloody stools", "prolonged fever", "rose-colored rash"
+      ]
+    },
+    {
+      "name": "viral_gastroenteritis",
+      "description": "Viral gastroenteritis, often called 'stomach flu', is inflammation of the stomach and intestines caused by various viruses including adenovirus, astrovirus, and sapovirus.",
+      "transmission": "Contaminated water, person-to-person contact, contaminated food, poor hygiene",
+      "severity": "Usually mild and self-limiting, lasting 1-3 days",
+      "treatment": "Supportive care with oral rehydration therapy, rest, gradual return to normal diet. No specific antiviral treatment available.",
+      "prevention": "Hand hygiene, safe water, avoid close contact with infected individuals, surface disinfection",
+      "region_specific_info": "Common during monsoon and winter months in Northeast India. Often spreads rapidly in schools and communities. Most cases resolve without medical intervention.",
+      "symptoms": [
+        "watery diarrhea", "vomiting", "nausea", "stomach cramps", "low-grade fever",
+        "headache", "muscle aches", "fatigue", "dehydration", "loss of appetite",
+        "abdominal discomfort"
+      ]
+    }
+  ],
+  "synonyms": {
+    "loose motions": "diarrhea",
+    "loose stools": "diarrhea",
+    "pet kharab": "stomach upset",
+    "bukhar": "fever",
+    "kamjori": "weakness",
+    "throwing up": "vomiting",
+    "puking": "vomiting",
+    "belly pain": "abdominal pain",
+    "stomach ache": "abdominal pain",
+    "body pain": "muscle aches",
+    "body ache": "muscle aches",
+    "tiredness": "fatigue",
+    "feeling weak": "weakness",
+    "yellow color": "jaundice",
+    "yellow eyes": "jaundice",
+    "runny poo": "diarrhea",
+    "tummy pain": "abdominal pain",
+    "gut pain": "abdominal pain",
+    "stomach cramps": "abdominal cramps",
+    "stomach upset": "nausea",
+    "feeling sick": "nausea",
+    "loose bowels": "diarrhea",
+    "watery stools": "watery diarrhea",
+    "bloody stools": "bloody diarrhea",
+    "frequent stools": "diarrhea",
+    "dehydrated": "dehydration",
+    "dry mouth": "dehydration",
+    "thirsty": "dehydration",
+    "no energy": "fatigue",
+    "exhausted": "fatigue",
+    "temperature": "fever",
+    "hot": "fever",
+    "chills": "fever",
+    "shivering": "chills",
+    "gas": "flatulence",
+    "bloated": "bloating",
+    "full stomach": "bloating",
+    "urgent toilet": "urgency to defecate",
+    "cannot control bowels": "urgency to defecate"
+  },
+  "prevention_tips": [
+    {
+      "tip_text": "Always boil water for at least 1 minute before drinking, especially during monsoon season",
+      "category": "water_safety",
+      "region_specific": 1,
+      "priority_level": 1
+    },
+    {
+      "tip_text": "Wash hands with soap and clean water for at least 20 seconds before eating and after using toilet",
+      "category": "hygiene",
+      "region_specific": 0,
+      "priority_level": 1
+    },
+    {
+      "tip_text": "Avoid raw or undercooked meat, fish, and eggs",
+      "category": "food_safety",
+      "region_specific": 0,
+      "priority_level": 1
+    },
+    {
+      "tip_text": "Do not swallow water while swimming in lakes, rivers, or pools",
+      "category": "recreational_water",
+      "region_specific": 1,
+      "priority_level": 2
+    },
+    {
+      "tip_text": "Get vaccinated for rotavirus (children) and hepatitis A as recommended",
+      "category": "vaccination",
+      "region_specific": 1,
+      "priority_level": 2
+    },
+    {
+      "tip_text": "Store cooked food at proper temperatures and consume within 2 hours",
+      "category": "food_safety",
+      "region_specific": 0,
+      "priority_level": 2
+    },
+    {
+      "tip_text": "Use oral rehydration solution (ORS) immediately if diarrhea starts",
+      "category": "treatment",
+      "region_specific": 1,
+      "priority_level": 1
+    },
+    {
+      "tip_text": "Maintain proper toilet hygiene and sewage disposal systems",
+      "category": "sanitation",
+      "region_specific": 1,
+      "priority_level": 1
+    },
+    {
+      "tip_text": "Avoid street food and water from unknown sources, especially during travel",
+      "category": "travel_safety",
+      "region_specific": 1,
+      "priority_level": 2
+    },
+    {
+      "tip_text": "Disinfect surfaces regularly, especially in households with infected individuals",
+      "category": "hygiene",
+      "region_specific": 0,
+      "priority_level": 2
+    }
+  ],
+  "emergency_contacts": {
+    "national_emergency": "108",
+    "medical_emergency": "102",
+    "regional_info": "Contact nearest Primary Health Centre (PHC) or Community Health Centre (CHC) for immediate medical attention"
+  },
+  "metadata": {
+    "created_date": "2025-09-05",
+    "source": "WHO, CDC, and medical literature compilation",
+    "target_region": "Northeast India",
+    "language_support": "English with local term synonyms",
+    "total_diseases": 10,
+    "total_synonyms": 32,
+    "total_prevention_tips": 10,
+    "description": "Comprehensive waterborne disease database specifically compiled for Northeast India region with local context, symptoms, treatments, and prevention measures based on current medical guidelines and regional epidemiological data"
+  }
+}
