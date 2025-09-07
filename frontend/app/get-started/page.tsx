@@ -192,7 +192,7 @@ const GetStartedPage = () => {
     setAnalysisResult(null)
 
     try {
-      const response = await fetch('http://localhost:8000/analyze-symptoms', {
+      const response = await fetch('http://localhost:8002/analyze-symptoms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
