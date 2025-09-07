@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 export const metadata: Metadata = {
-  title: "Waterborne Disease Awareness",
+  title: "Nirogya",
   description: "An application to predict and spread awareness according to patient's symptoms",
 };
 

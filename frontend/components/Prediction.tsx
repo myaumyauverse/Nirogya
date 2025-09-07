@@ -9,6 +9,44 @@ interface PredictionResult {
   month: string
   predicted_cases: number
   risk_level: string
+  most_likely_disease: string
+  seasonal_factor: number
+  recommendations: string[]
+}
+
+interface DiseaseCorrelationAnalysis {
+  disease_prediction: {
+    predicted_cases: number
+    confidence: string
+    most_likely_disease: string
+    disease_probability: number
+    method: string
+  }
+  water_assessment: {
+    wqi: number
+    quality_category: string
+    quality_risk: string
+    risk_factors: string[]
+    critical_violations: string[]
+  }
+  correlation_analysis: {
+    correlation_score: number
+    correlation_strength: string
+    combined_risk_level: string
+    correlation_factors: string[]
+    disease_water_match: boolean
+    critical_intervention_needed: boolean
+  }
+  future_predictions: {[key: string]: PredictionResult}
+  recommendations: string[]
+  risk_scores: {
+    disease_risk: number
+    water_risk: number
+    correlation_risk: number
+    combined_risk: number
+  }
+  alert_level: string
+  analysis_timestamp: string
 }
 
 const Prediction = () => {
@@ -24,7 +62,7 @@ const Prediction = () => {
     total_coliform: 450.0,
     temperature: 28.0,
   })
-  const [prediction, setPrediction] = useState<PredictionResult[] | null>(null)
+  const [analysis, setAnalysis] = useState<DiseaseCorrelationAnalysis | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -36,7 +74,7 @@ const Prediction = () => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
-    setPrediction(null)
+    setAnalysis(null)
 
     const requestData = {
       outbreak_data: {
@@ -53,15 +91,17 @@ const Prediction = () => {
         total_coliform: formData.total_coliform,
         temperature: formData.temperature,
       },
+      include_future: true,
       months_ahead: 3,
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/future-trends', requestData)
+      // Use the complete integrated analysis endpoint instead of just future-trends
+      const response = await axios.post('http://localhost:5000/api/analyze', requestData)
       if (response.data.success) {
-        setPrediction(response.data.future_predictions)
+        setAnalysis(response.data.analysis)
       } else {
-        setError(response.data.error || 'Prediction failed')
+        setError(response.data.error || 'Analysis failed')
       }
     } catch (err: any) {
       if (err.response?.data?.error) {
@@ -241,66 +281,270 @@ const Prediction = () => {
         </div>
         <Button
             type="submit"
-            title={isLoading ? "Predicting..." : "Predict Disease Outbreak"}
+            title={isLoading ? "Analyzing..." : "🧪 Run Complete Disease-Water Analysis"}
             variant="btn_primary"
             disabled={isLoading}
         />
       </form>
 
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {error && (
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-600 font-medium">⚠️ Analysis Error</p>
+          <p className="text-red-500 text-sm mt-1">{error}</p>
+        </div>
+      )}
 
-      {prediction && (
+      {analysis && (
         <motion.div
-          className="mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          className="mt-8 space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <h3 className="bold-20 text-gray-90 mb-4">🔮 3-Month Future Predictions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {Object.entries(prediction).map(([monthKey, p]: [string, any], index) => {
-              const monthNames = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
-                                7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
-              const riskColors = {
-                'Low': 'bg-green-100 border-green-300 text-green-800',
-                'Medium': 'bg-yellow-100 border-yellow-300 text-yellow-800',
-                'High': 'bg-orange-100 border-orange-300 text-orange-800',
-                'Critical': 'bg-red-100 border-red-300 text-red-800'
-              }
-              
-              return (
-                <div key={index} className={`p-4 rounded-lg border-2 ${riskColors[p.risk_level] || 'bg-gray-100 border-gray-300'}`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="bold-16">{monthNames[p.month] || `Month ${p.month}`}</h4>
-                    <span className="text-xs px-2 py-1 rounded-full bg-white/50">
-                      {p.risk_level}
-                    </span>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm">
-                      <span className="font-semibold">Cases:</span> {p.predicted_cases}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-semibold">Disease:</span> {p.most_likely_disease}
-                    </p>
-                    <p className="text-xs opacity-75">
-                      Seasonal Factor: {p.seasonal_factor?.toFixed(2) || 'N/A'}
-                    </p>
-                    {p.recommendations && p.recommendations.length > 0 && (
-                      <div className="mt-2">
-                        <p className="text-xs font-semibold mb-1">Key Action:</p>
-                        <p className="text-xs opacity-75">{p.recommendations[0]}</p>
-                      </div>
-                    )}
-                  </div>
+          {/* Alert Level Banner */}
+          <div className={`p-4 rounded-lg border-2 ${
+            analysis.alert_level.includes('CRITICAL') ? 'bg-red-100 border-red-300 text-red-800' :
+            analysis.alert_level.includes('HIGH') ? 'bg-orange-100 border-orange-300 text-orange-800' :
+            analysis.alert_level.includes('MEDIUM') ? 'bg-yellow-100 border-yellow-300 text-yellow-800' :
+            'bg-green-100 border-green-300 text-green-800'
+          }`}>
+            <div className="flex items-center justify-between">
+              <h2 className="bold-20">{analysis.alert_level}</h2>
+              <span className="text-sm opacity-75">
+                📅 {new Date(analysis.analysis_timestamp).toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          {/* Disease Prediction Section */}
+          <div className="bg-primary-50 p-6 rounded-lg">
+            <h3 className="bold-18 text-gray-90 mb-4">🦠 Disease Prediction Analysis</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Most Likely Disease</h4>
+                <p className="bold-16 text-primary-500">{analysis.disease_prediction.most_likely_disease}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Predicted Cases</h4>
+                <p className="bold-16 text-orange-500">{Math.round(analysis.disease_prediction.predicted_cases)}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Confidence Level</h4>
+                <p className="bold-16 text-blue-500">{analysis.disease_prediction.confidence}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Probability</h4>
+                <p className="bold-16 text-purple-500">{analysis.disease_prediction.disease_probability}%</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Water Quality Assessment Section */}
+          <div className="bg-blue-50 p-6 rounded-lg">
+            <h3 className="bold-18 text-gray-90 mb-4">💧 Water Quality Assessment</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">WQI Score</h4>
+                <p className="bold-16 text-blue-500">{analysis.water_assessment.wqi.toFixed(1)}/100</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Quality Category</h4>
+                <p className="bold-16 text-green-500">{analysis.water_assessment.quality_category}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Risk Level</h4>
+                <p className={`bold-16 ${
+                  analysis.water_assessment.quality_risk === 'Very High' ? 'text-red-500' :
+                  analysis.water_assessment.quality_risk === 'High' ? 'text-orange-500' :
+                  analysis.water_assessment.quality_risk === 'Medium' ? 'text-yellow-500' :
+                  'text-green-500'
+                }`}>{analysis.water_assessment.quality_risk}</p>
+              </div>
+            </div>
+            
+            {analysis.water_assessment.risk_factors.length > 0 && (
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-2">⚠️ Risk Factors Identified</h4>
+                <div className="space-y-1">
+                  {analysis.water_assessment.risk_factors.map((factor, index) => (
+                    <p key={index} className="text-sm text-red-600">• {factor}</p>
+                  ))}
                 </div>
-              )
-            })}
+              </div>
+            )}
+          </div>
+
+          {/* Disease-Water Correlation Section */}
+          <div className="bg-purple-50 p-6 rounded-lg">
+            <h3 className="bold-18 text-gray-90 mb-4">🔗 Disease-Water Quality Correlation</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Correlation Strength</h4>
+                <p className="bold-16 text-purple-500">{analysis.correlation_analysis.correlation_strength}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Correlation Score</h4>
+                <p className="bold-16 text-indigo-500">{analysis.correlation_analysis.correlation_score}/100</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Combined Risk</h4>
+                <p className={`bold-16 ${
+                  analysis.correlation_analysis.combined_risk_level === 'Critical' ? 'text-red-500' :
+                  analysis.correlation_analysis.combined_risk_level === 'High' ? 'text-orange-500' :
+                  analysis.correlation_analysis.combined_risk_level === 'Medium' ? 'text-yellow-500' :
+                  'text-green-500'
+                }`}>{analysis.correlation_analysis.combined_risk_level}</p>
+              </div>
+            </div>
+            
+            {analysis.correlation_analysis.correlation_factors.length > 0 && (
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-2">🎯 Contributing Factors</h4>
+                <div className="space-y-1">
+                  {analysis.correlation_analysis.correlation_factors.map((factor, index) => (
+                    <p key={index} className="text-sm text-purple-600">• {factor}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {analysis.correlation_analysis.critical_intervention_needed && (
+              <div className="bg-red-100 border-2 border-red-300 p-4 rounded-lg mt-4">
+                <h4 className="bold-16 text-red-800 mb-2">🚨 CRITICAL INTERVENTION REQUIRED</h4>
+                <p className="text-sm text-red-700">
+                  The correlation analysis indicates that immediate intervention is needed to prevent disease escalation.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Risk Assessment Breakdown */}
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <h3 className="bold-18 text-gray-90 mb-4">📊 Risk Assessment Breakdown</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Disease Risk</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-red-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${analysis.risk_scores.disease_risk}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium">{analysis.risk_scores.disease_risk.toFixed(1)}</span>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Water Risk</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${analysis.risk_scores.water_risk}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium">{analysis.risk_scores.water_risk.toFixed(1)}</span>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded-lg">
+                <h4 className="regular-14 text-gray-70 mb-1">Correlation Risk</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-purple-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${analysis.risk_scores.correlation_risk}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium">{analysis.risk_scores.correlation_risk.toFixed(1)}</span>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-2 border-primary-300">
+                <h4 className="regular-14 text-gray-70 mb-1">🎯 Combined Risk</h4>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-3">
+                    <div 
+                      className={`h-3 rounded-full transition-all duration-500 ${
+                        analysis.risk_scores.combined_risk >= 80 ? 'bg-red-500' :
+                        analysis.risk_scores.combined_risk >= 60 ? 'bg-orange-500' :
+                        analysis.risk_scores.combined_risk >= 40 ? 'bg-yellow-500' :
+                        'bg-green-500'
+                      }`}
+                      style={{ width: `${analysis.risk_scores.combined_risk}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-bold">{analysis.risk_scores.combined_risk.toFixed(1)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Future Predictions Section */}
+          {analysis.future_predictions && (
+            <div className="bg-indigo-50 p-6 rounded-lg">
+              <h3 className="bold-18 text-gray-90 mb-4">🔮 3-Month Future Outbreak Predictions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(analysis.future_predictions).map(([monthKey, p]: [string, any], index) => {
+                  const monthNames = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
+                                    7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
+                  const riskColors = {
+                    'Low': 'bg-green-100 border-green-300 text-green-800',
+                    'Medium': 'bg-yellow-100 border-yellow-300 text-yellow-800',
+                    'High': 'bg-orange-100 border-orange-300 text-orange-800',
+                    'Critical': 'bg-red-100 border-red-300 text-red-800'
+                  }
+                  
+                  return (
+                    <div key={index} className={`p-4 rounded-lg border-2 ${riskColors[p.risk_level] || 'bg-gray-100 border-gray-300'}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="bold-16">{monthNames[p.month] || `Month ${p.month}`}</h4>
+                        <span className="text-xs px-2 py-1 rounded-full bg-white/50">
+                          {p.risk_level}
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm">
+                          <span className="font-semibold">Cases:</span> {p.predicted_cases}
+                        </p>
+                        <p className="text-sm">
+                          <span className="font-semibold">Disease:</span> {p.most_likely_disease}
+                        </p>
+                        <p className="text-xs opacity-75">
+                          Seasonal Factor: {p.seasonal_factor?.toFixed(2) || 'N/A'}
+                        </p>
+                        {p.recommendations && p.recommendations.length > 0 && (
+                          <div className="mt-2">
+                            <p className="text-xs font-semibold mb-1">Key Action:</p>
+                            <p className="text-xs opacity-75">{p.recommendations[0]}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Integrated Recommendations Section */}
+          <div className="bg-green-50 p-6 rounded-lg">
+            <h3 className="bold-18 text-gray-90 mb-4">💡 Integrated Recommendations</h3>
+            <div className="space-y-3">
+              {analysis.recommendations.map((recommendation, index) => (
+                <div key={index} className="flex items-start space-x-3 bg-white p-3 rounded-lg">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                    {index + 1}
+                  </span>
+                  <p className="text-sm text-gray-700">{recommendation}</p>
+                </div>
+              ))}
+            </div>
           </div>
           
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-800">
-              <span className="font-semibold">Note:</span> These predictions are based on current outbreak data, 
-              water quality parameters, and seasonal patterns. Results may vary based on intervention measures.
+              <span className="font-semibold">📋 Analysis Summary:</span> This comprehensive report combines disease outbreak predictions, 
+              water quality assessment, correlation analysis, and future trends to provide actionable health insights. 
+              The analysis uses ML models with 91.6% accuracy and WHO/BIS water quality standards for assessment.
             </p>
           </div>
         </motion.div>
