@@ -3,16 +3,24 @@
 import { NAV_LINKS } from "@/constants"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { motion } from 'framer-motion'
 import Button from "./Button"
 import LanguageToggle from "./LanguageToggle"
 import { useLanguage } from "@/contexts/LanguageContext"
+import { useAuth } from "@/contexts/AuthContext"
 
 const Navbar = () => {
   const pathname = usePathname()
+  const router = useRouter()
   const isDashboard = pathname?.includes('/doctor/dashboard')
   const { t } = useLanguage()
+  const { logout, isAuthenticated } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+    router.push('/doctor/login')
+  }
 
   return (
     <motion.nav
@@ -65,14 +73,13 @@ const Navbar = () => {
 
         <div className="lg:flexCenter hidden gap-4">
           <LanguageToggle />
-          {isDashboard ? (
-            <Link href="/doctor/login">
-              <Button
-                type="button"
-                title={t('nav.logout')}
-                variant="btn_primary"
-              />
-            </Link>
+          {isDashboard && isAuthenticated ? (
+            <Button
+              type="button"
+              title={t('nav.logout')}
+              variant="btn_primary"
+              onClick={handleLogout}
+            />
           ) : (
             <Link href="/doctor/login">
               <Button

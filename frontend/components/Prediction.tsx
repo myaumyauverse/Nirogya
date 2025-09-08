@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { motion } from 'framer-motion'
 import Button from './Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface PredictionResult {
   month: string
@@ -63,6 +64,7 @@ interface FormData {
 }
 
 const Prediction = () => {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState<FormData>({
     No_of_Cases: 150,
     Northeast_State: 2,
@@ -145,14 +147,14 @@ const Prediction = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="bold-24 text-gray-90 mb-4">Disease Prediction</h2>
+      <h2 className="bold-24 text-gray-90 mb-4">{t('prediction.title')}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Outbreak Information Section */}
         <div className="bg-primary-50 p-4 rounded-lg">
-          <h3 className="bold-18 text-gray-90 mb-3">📊 Outbreak Information</h3>
+          <h3 className="bold-18 text-gray-90 mb-3">📊 {t('prediction.outbreakInfo.title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Number of Cases</label>
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.outbreakInfo.cases')}</label>
               <input
                 type="number"
                 name="No_of_Cases"
@@ -164,43 +166,43 @@ const Prediction = () => {
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Northeast State</label>
-              <select 
-                name="Northeast_State" 
-                value={formData.Northeast_State} 
-                onChange={handleChange} 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.outbreakInfo.state')}</label>
+              <select
+                name="Northeast_State"
+                value={formData.Northeast_State}
+                onChange={handleChange}
                 className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value={1}>Arunachal Pradesh</option>
-                <option value={2}>Assam</option>
-                <option value={3}>Manipur</option>
-                <option value={4}>Meghalaya</option>
-                <option value={5}>Mizoram</option>
-                <option value={6}>Nagaland</option>
-                <option value={7}>Sikkim</option>
-                <option value={8}>Tripura</option>
+                <option value={1}>{t('states.arunachal')}</option>
+                <option value={2}>{t('states.assam')}</option>
+                <option value={3}>{t('states.manipur')}</option>
+                <option value={4}>{t('states.meghalaya')}</option>
+                <option value={5}>{t('states.mizoram')}</option>
+                <option value={6}>{t('states.nagaland')}</option>
+                <option value={7}>{t('states.sikkim')}</option>
+                <option value={8}>{t('states.tripura')}</option>
               </select>
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Outbreak Month</label>
-              <select 
-                name="Start_of_Outbreak_Month" 
-                value={formData.Start_of_Outbreak_Month} 
-                onChange={handleChange} 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.outbreakInfo.month')}</label>
+              <select
+                name="Start_of_Outbreak_Month"
+                value={formData.Start_of_Outbreak_Month}
+                onChange={handleChange}
                 className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value={1}>January</option>
-                <option value={2}>February</option>
-                <option value={3}>March</option>
-                <option value={4}>April</option>
-                <option value={5}>May</option>
-                <option value={6}>June</option>
-                <option value={7}>July</option>
-                <option value={8}>August</option>
-                <option value={9}>September</option>
-                <option value={10}>October</option>
-                <option value={11}>November</option>
-                <option value={12}>December</option>
+                <option value={1}>{t('months.january')}</option>
+                <option value={2}>{t('months.february')}</option>
+                <option value={3}>{t('months.march')}</option>
+                <option value={4}>{t('months.april')}</option>
+                <option value={5}>{t('months.may')}</option>
+                <option value={6}>{t('months.june')}</option>
+                <option value={7}>{t('months.july')}</option>
+                <option value={8}>{t('months.august')}</option>
+                <option value={9}>{t('months.september')}</option>
+                <option value={10}>{t('months.october')}</option>
+                <option value={11}>{t('months.november')}</option>
+                <option value={12}>{t('months.december')}</option>
               </select>
             </div>
           </div>
@@ -208,10 +210,10 @@ const Prediction = () => {
 
         {/* Water Quality Parameters Section */}
         <div className="bg-blue-50 p-4 rounded-lg">
-          <h3 className="bold-18 text-gray-90 mb-3">💧 Water Quality Parameters</h3>
+          <h3 className="bold-18 text-gray-90 mb-3">💧 {t('prediction.waterQuality.title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">pH Level (0.0-14.0)</label>
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.ph')}</label>
               <input
                 type="number"
                 name="ph"
@@ -221,81 +223,81 @@ const Prediction = () => {
                 min="0.0"
                 max="14.0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Dissolved Oxygen (mg/L)</label>
-              <input 
-                type="number" 
-                name="dissolved_oxygen" 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.dissolvedOxygen')}</label>
+              <input
+                type="number"
+                name="dissolved_oxygen"
                 value={formData.dissolved_oxygen === '' ? '' : formData.dissolved_oxygen}
-                onChange={handleChange} 
-                placeholder="5.0" 
-                min="0" 
+                onChange={handleChange}
+                placeholder="5.0"
+                min="0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">BOD (mg/L)</label>
-              <input 
-                type="number" 
-                name="bod" 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.bod')}</label>
+              <input
+                type="number"
+                name="bod"
                 value={formData.bod === '' ? '' : formData.bod}
-                onChange={handleChange} 
-                placeholder="3.0" 
-                min="0" 
+                onChange={handleChange}
+                placeholder="3.0"
+                min="0"
                 step="0.1"
                 className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Nitrate-N (mg/L)</label>
-              <input 
-                type="number" 
-                name="nitrate_n" 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.nitrate')}</label>
+              <input
+                type="number"
+                name="nitrate_n"
                 value={formData.nitrate_n === '' ? '' : formData.nitrate_n}
-                onChange={handleChange} 
-                placeholder="5.0" 
-                min="0" 
+                onChange={handleChange}
+                placeholder="5.0"
+                min="0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Fecal Coliform (CFU/100mL)</label>
-              <input 
-                type="number" 
-                name="fecal_coliform" 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.fecalColiform')}</label>
+              <input
+                type="number"
+                name="fecal_coliform"
                 value={formData.fecal_coliform === '' ? '' : formData.fecal_coliform}
-                onChange={handleChange} 
-                placeholder="20" 
-                min="0" 
+                onChange={handleChange}
+                placeholder="20"
+                min="0"
                 step="1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Total Coliform (CFU/100mL)</label>
-              <input 
-                type="number" 
-                name="total_coliform" 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.totalColiform')}</label>
+              <input
+                type="number"
+                name="total_coliform"
                 value={formData.total_coliform === '' ? '' : formData.total_coliform}
-                onChange={handleChange} 
-                placeholder="100" 
-                min="0" 
+                onChange={handleChange}
+                placeholder="100"
+                min="0"
                 step="1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">Temperature (°C)</label>
-              <input 
-                type="number" 
-                name="temperature" 
+              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.temperature')}</label>
+              <input
+                type="number"
+                name="temperature"
                 value={formData.temperature === '' ? '' : formData.temperature}
-                onChange={handleChange} 
+                onChange={handleChange}
                 placeholder="25.0" 
                 min="0" 
                 max="50" 
@@ -307,7 +309,7 @@ const Prediction = () => {
         </div>
         <Button
             type="submit"
-            title={isLoading ? "Analyzing..." : "🧪 Run Complete Disease-Water Analysis"}
+            title={isLoading ? t('prediction.analyzing') : t('prediction.analyzeButton')}
             variant="btn_primary"
             disabled={isLoading}
         />
@@ -315,7 +317,7 @@ const Prediction = () => {
 
       {error && (
         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-600 font-medium">⚠️ Analysis Error</p>
+          <p className="text-red-600 font-medium">⚠️ {t('prediction.error.title')}</p>
           <p className="text-red-500 text-sm mt-1">{error}</p>
         </div>
       )}
@@ -344,21 +346,21 @@ const Prediction = () => {
 
           {/* Disease Prediction Section */}
           <div className="bg-primary-50 p-6 rounded-lg">
-            <h3 className="bold-18 text-gray-90 mb-4">🦠 Disease Prediction Analysis</h3>
+            <h3 className="bold-18 text-gray-90 mb-4">🦠 {t('prediction.results.diseaseTitle')}</h3>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Main Disease Card - Larger */}
               <div className="lg:col-span-2">
                 <div className="bg-white p-6 rounded-lg h-full flex flex-col justify-center">
-                  <h4 className="regular-14 text-gray-70 mb-2">Most Likely Disease</h4>
+                  <h4 className="regular-14 text-gray-70 mb-2">{t('prediction.results.mostLikely')}</h4>
                   <p className="bold-24 text-primary-500 mb-2">{analysis.disease_prediction.most_likely_disease}</p>
-                  <p className="regular-12 text-gray-60">Based on outbreak data and water quality analysis</p>
+                  <p className="regular-12 text-gray-60">{t('prediction.results.basedOn')}</p>
                 </div>
               </div>
 
               {/* Secondary Info Cards - Smaller, Stacked */}
               <div className="space-y-4">
                 <div className="bg-white p-4 rounded-lg">
-                  <h4 className="regular-12 text-gray-70 mb-1">Confidence Level</h4>
+                  <h4 className="regular-12 text-gray-70 mb-1">{t('prediction.results.confidence')}</h4>
                   <p className="bold-18 text-blue-500">{analysis.disease_prediction.confidence}</p>
                 </div>
                 <div className="bg-white p-4 rounded-lg">
@@ -513,7 +515,7 @@ const Prediction = () => {
           {/* Future Predictions Section */}
           {analysis.future_predictions && (
             <div className="bg-indigo-50 p-6 rounded-lg">
-              <h3 className="bold-18 text-gray-90 mb-4">🔮 3-Month Future Outbreak Predictions</h3>
+              <h3 className="bold-18 text-gray-90 mb-4">🔮 {t('prediction.results.futureTitle')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.entries(analysis.future_predictions).map(([monthKey, p]: [string, any], index) => {
                   const monthNames = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
@@ -535,13 +537,13 @@ const Prediction = () => {
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm">
-                          <span className="font-semibold">Cases:</span> {p.predicted_cases}
+                          <span className="font-semibold">{t('prediction.results.cases')}:</span> {p.predicted_cases}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Disease:</span> {p.most_likely_disease}
+                          <span className="font-semibold">{t('prediction.results.disease')}:</span> {p.most_likely_disease}
                         </p>
                         <p className="text-xs opacity-75">
-                          Seasonal Factor: {p.seasonal_factor?.toFixed(2) || 'N/A'}
+                          {t('prediction.results.seasonalFactor')}: {p.seasonal_factor?.toFixed(2) || 'N/A'}
                         </p>
                         {p.recommendations && p.recommendations.length > 0 && (
                           <div className="mt-2">
@@ -574,9 +576,7 @@ const Prediction = () => {
           
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-800">
-              <span className="font-semibold">📋 Analysis Summary:</span> This comprehensive report combines disease outbreak predictions, 
-              water quality assessment, correlation analysis, and future trends to provide actionable health insights. 
-              The analysis uses ML models with 91.6% accuracy and WHO/BIS water quality standards for assessment.
+              <span className="font-semibold">📋 {t('prediction.results.summary')}:</span> {t('prediction.results.summaryText')}
             </p>
           </div>
         </motion.div>

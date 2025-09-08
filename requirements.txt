@@ -55,6 +55,12 @@ typing-extensions==4.8.0
 # HTTP client for API calls
 requests==2.31.0
 
+# Async HTTP client for news ticker service
+aiohttp==3.9.1
+
+# Environment variable management
+python-dotenv==1.0.0
+
 # CORS handling (already included with flask-cors)
 # Cross-origin resource sharing support
 

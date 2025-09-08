@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NewsTicker from "@/components/NewsTicker";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Nirogya",
@@ -18,11 +20,14 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <LanguageProvider>
-          <Navbar />
-          <main className="relative overflow-hidden">
-          {children}
-          </main>
-          <Footer />
+          <AuthProvider>
+            <NewsTicker />
+            <Navbar />
+            <main className="relative overflow-hidden">
+            {children}
+            </main>
+            <Footer />
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

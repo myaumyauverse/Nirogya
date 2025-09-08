@@ -18,10 +18,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, List, Optional
+from datetime import datetime, timedelta
 import sys
 import os
 import json
 import logging
+import asyncio
 
 # Add the AI chatbot directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'AI chatbot'))
@@ -43,6 +45,24 @@ try:
 except ImportError as e:
     print(f"Warning: Disease prediction service not available: {e}")
     DiseasePredictor = None
+
+# Import news ticker service
+try:
+    from news_ticker_service import get_latest_alerts
+except ImportError as e:
+    print(f"Warning: News ticker service not available: {e}")
+    get_latest_alerts = None
+
+# Import mock data service for fallback
+try:
+    from mock_news_data import get_mock_response
+except ImportError as e:
+    print(f"Warning: Mock news data service not available: {e}")
+    get_mock_response = None
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Try to import additional data services if available
 try:
@@ -307,6 +327,112 @@ def generate_recommendations(diseases: List[DiseaseMatch], symptoms: str) -> Lis
         recommendations.append("💧 Take small, frequent sips of clear fluids")
     
     return recommendations[:7]  # Limit to 7 recommendations
+
+@app.get("/api/news-ticker")
+async def get_news_ticker():
+    """
+    Get real-time alerts for the news ticker
+
+    Returns:
+        List of formatted alerts from WaterNet ICMR and Meersens API
+    """
+    try:
+        # Check if we should use mock data
+        use_mock_data = os.getenv('USE_MOCK_DATA', 'false').lower() == 'true'
+
+        if use_mock_data or get_latest_alerts is None:
+            # Use mock data service if available, otherwise simple fallback
+            if get_mock_response:
+                logger.info("Using mock data for news ticker")
+                return get_mock_response()
+            else:
+                # Simple fallback if mock service also not available
+                return {
+                    "success": True,
+                    "alerts": [
+                        {
+                            "id": "fallback_1",
+                            "text": "Water quality monitoring active across Northeast India – Stay informed!",
+                            "severity": "low",
+                            "region": "Northeast India",
+                            "source": "Nirogya System",
+                            "timestamp": datetime.now().isoformat(),
+                            "type": "advisory"
+                        }
+                    ],
+                    "last_updated": datetime.now().isoformat(),
+                    "next_update": (datetime.now() + timedelta(hours=1)).isoformat(),
+                    "total_alerts": 1
+                }
+
+        # Get latest alerts from the news ticker service
+        alerts = await get_latest_alerts()
+
+        return {
+            "success": True,
+            "alerts": alerts,
+            "last_updated": datetime.now().isoformat(),
+            "next_update": (datetime.now() + timedelta(hours=1)).isoformat(),
+            "total_alerts": len(alerts)
+        }
+
+    except Exception as e:
+        logger.error(f"Error fetching news ticker alerts: {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "alerts": [],
+            "last_updated": datetime.now().isoformat()
+        }
+
+@app.get("/api/news-ticker/health")
+async def news_ticker_health():
+    """Health check for news ticker service"""
+    try:
+        use_mock_data = os.getenv('USE_MOCK_DATA', 'false').lower() == 'true'
+
+        if use_mock_data:
+            return {
+                "status": "healthy",
+                "message": "News ticker service operational with mock data",
+                "mode": "development",
+                "services": {
+                    "mock_data_service": "available" if get_mock_response else "unavailable",
+                    "waternet_icmr": "disabled (mock mode)",
+                    "meersens_api": "disabled (mock mode)"
+                },
+                "last_check": datetime.now().isoformat()
+            }
+
+        # Test if the service is working
+        if get_latest_alerts is None:
+            return {
+                "status": "limited",
+                "message": "News ticker service not fully available - using fallback data",
+                "mode": "production",
+                "services": {
+                    "waternet_icmr": "unavailable",
+                    "meersens_api": "unavailable"
+                }
+            }
+
+        return {
+            "status": "healthy",
+            "message": "News ticker service operational",
+            "mode": "production",
+            "services": {
+                "waternet_icmr": "available",
+                "meersens_api": "available" if os.getenv('MEERSENS_API_KEY') else "no_api_key"
+            },
+            "last_check": datetime.now().isoformat()
+        }
+
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"News ticker service error: {str(e)}",
+            "last_check": datetime.now().isoformat()
+        }
 
 if __name__ == "__main__":
     import uvicorn

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Papa from 'papaparse'
 import { motion } from 'framer-motion'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface DiseaseRecord {
   'ID': number
@@ -22,6 +23,7 @@ interface DiseaseRecord {
 }
 
 const RecordBook = () => {
+  const { t } = useLanguage()
   const [records, setRecords] = useState<DiseaseRecord[]>([])
   const [filteredRecords, setFilteredRecords] = useState<DiseaseRecord[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -68,16 +70,16 @@ const RecordBook = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="bold-24 text-gray-90 mb-4">Disease Records</h2>
+      <h2 className="bold-24 text-gray-90 mb-4">{t('recordBook.title')}</h2>
       <div className="mb-4 flex flex-col sm:flex-row gap-4">
         <input
           type="text"
-          placeholder="Search by disease, state, district, or status..."
+          placeholder={t('recordBook.searchPlaceholder')}
           className="flex-1 px-4 py-3 bg-gray-10 rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <div className="text-sm text-gray-600 flex items-center">
-          Showing {filteredRecords.length} of {records.length} records
+          {t('recordBook.showing')} {filteredRecords.length} {t('recordBook.of')} {records.length} {t('recordBook.records')}
         </div>
       </div>
       
@@ -86,13 +88,13 @@ const RecordBook = () => {
           <thead className="bg-primary-50 sticky top-0">
             <tr>
               <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">ID</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">Disease</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">State</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">District</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">Cases</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">Deaths</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">Outbreak Date</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.disease')}</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.state')}</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.district')}</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.cases')}</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.deaths')}</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.status')}</th>
+              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.date')}</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -143,7 +145,7 @@ const RecordBook = () => {
         
         {filteredRecords.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            <p>No records found matching your search criteria.</p>
+            <p>{t('recordBook.noRecords')}</p>
           </div>
         )}
       </motion.div>
