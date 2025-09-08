@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import NewsTicker from "@/components/NewsTicker";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { PatientProvider } from "@/contexts/PatientContext";
 
 export const metadata: Metadata = {
   title: "Nirogya",
@@ -21,12 +22,14 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <LanguageProvider>
           <AuthProvider>
-            <NewsTicker />
-            <Navbar />
-            <main className="relative overflow-hidden">
-            {children}
-            </main>
-            <Footer />
+            <PatientProvider>
+              <NewsTicker />
+              <Navbar />
+              <main className="relative overflow-hidden">
+              {children}
+              </main>
+              <Footer />
+            </PatientProvider>
           </AuthProvider>
         </LanguageProvider>
       </body>

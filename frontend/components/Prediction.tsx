@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import axios from 'axios'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -77,9 +77,74 @@ const Prediction = () => {
     total_coliform: 450.0,
     temperature: 28.0,
   })
+
+  const [showAlertButton, setShowAlertButton] = useState(false)
+  const [showAlertConfirm, setShowAlertConfirm] = useState(false)
+  const [alertSent, setAlertSent] = useState(false)
+  const [sendingAlert, setSendingAlert] = useState(false)
   const [analysis, setAnalysis] = useState<DiseaseCorrelationAnalysis | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Function to check if water risk is medium to high
+  const checkWaterRisk = (analysis: any) => {
+    if (!analysis?.water_quality_assessment) return false
+
+    const wqi = analysis.water_quality_assessment.wqi
+    const category = analysis.water_quality_assessment.category?.toLowerCase()
+
+    // Show alert button if WQI is below 70 or category indicates medium/high risk
+    return wqi < 70 ||
+           category?.includes('poor') ||
+           category?.includes('very poor') ||
+           category?.includes('unsuitable') ||
+           category?.includes('medium') ||
+           category?.includes('high')
+  }
+
+  // Function to get region name from state code
+  const getRegionName = (stateCode: number) => {
+    const stateNames = {
+      1: 'Arunachal Pradesh',
+      2: 'Assam',
+      3: 'Manipur',
+      4: 'Meghalaya',
+      5: 'Mizoram',
+      6: 'Nagaland',
+      7: 'Sikkim',
+      8: 'Tripura'
+    }
+    return stateNames[stateCode as keyof typeof stateNames] || 'Northeast Region'
+  }
+
+  // Function to send alert
+  const handleSendAlert = async () => {
+    setSendingAlert(true)
+
+    try {
+      // Simulate API call to send alert
+      await new Promise(resolve => setTimeout(resolve, 2000))
+
+      // In a real implementation, this would call an API to:
+      // 1. Get all users in the selected region
+      // 2. Send SMS/email/push notifications
+      // 3. Log the alert in the system
+
+      setAlertSent(true)
+      setShowAlertConfirm(false)
+
+      // Show success popup
+      setTimeout(() => {
+        setAlertSent(false)
+      }, 3000)
+
+    } catch (error) {
+      console.error('Failed to send alert:', error)
+      alert('Failed to send alert. Please try again.')
+    } finally {
+      setSendingAlert(false)
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -128,6 +193,10 @@ const Prediction = () => {
       const response = await axios.post('http://localhost:5000/api/analyze', requestData)
       if (response.data.success) {
         setAnalysis(response.data.analysis)
+
+        // Check if water risk is medium to high and show alert button
+        const shouldShowAlert = checkWaterRisk(response.data.analysis)
+        setShowAlertButton(shouldShowAlert)
       } else {
         setError(response.data.error || 'Analysis failed')
       }
@@ -146,15 +215,15 @@ const Prediction = () => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="bold-24 text-gray-90 mb-4">{t('prediction.title')}</h2>
+    <div className="bg-gradient-to-br from-primary-50 via-white to-primary-100 rounded-2xl shadow-lg p-6 border border-primary-200">
+      <h2 className="bold-24 text-primary-700 mb-4">{t('prediction.title')}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Outbreak Information Section */}
-        <div className="bg-primary-50 p-4 rounded-lg">
-          <h3 className="bold-18 text-gray-90 mb-3">📊 {t('prediction.outbreakInfo.title')}</h3>
+        <div className="bg-gradient-to-r from-primary-100 to-primary-50 p-4 rounded-lg border border-primary-200">
+          <h3 className="bold-18 text-primary-700 mb-3">📊 {t('prediction.outbreakInfo.title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.outbreakInfo.cases')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.outbreakInfo.cases')}</label>
               <input
                 type="number"
                 name="No_of_Cases"
@@ -162,16 +231,16 @@ const Prediction = () => {
                 onChange={handleChange}
                 placeholder="150"
                 min="0"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.outbreakInfo.state')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.outbreakInfo.state')}</label>
               <select
                 name="Northeast_State"
                 value={formData.Northeast_State}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               >
                 <option value={1}>{t('states.arunachal')}</option>
                 <option value={2}>{t('states.assam')}</option>
@@ -184,12 +253,12 @@ const Prediction = () => {
               </select>
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.outbreakInfo.month')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.outbreakInfo.month')}</label>
               <select
                 name="Start_of_Outbreak_Month"
                 value={formData.Start_of_Outbreak_Month}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               >
                 <option value={1}>{t('months.january')}</option>
                 <option value={2}>{t('months.february')}</option>
@@ -209,11 +278,11 @@ const Prediction = () => {
         </div>
 
         {/* Water Quality Parameters Section */}
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <h3 className="bold-18 text-gray-90 mb-3">💧 {t('prediction.waterQuality.title')}</h3>
+        <div className="bg-gradient-to-r from-blue-50 to-primary-50 p-4 rounded-lg border border-primary-200">
+          <h3 className="bold-18 text-primary-700 mb-3">💧 {t('prediction.waterQuality.title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.ph')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.ph')}</label>
               <input
                 type="number"
                 name="ph"
@@ -223,11 +292,11 @@ const Prediction = () => {
                 min="0.0"
                 max="14.0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.dissolvedOxygen')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.dissolvedOxygen')}</label>
               <input
                 type="number"
                 name="dissolved_oxygen"
@@ -236,11 +305,11 @@ const Prediction = () => {
                 placeholder="5.0"
                 min="0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.bod')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.bod')}</label>
               <input
                 type="number"
                 name="bod"
@@ -249,11 +318,11 @@ const Prediction = () => {
                 placeholder="3.0"
                 min="0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.nitrate')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.nitrate')}</label>
               <input
                 type="number"
                 name="nitrate_n"
@@ -262,11 +331,11 @@ const Prediction = () => {
                 placeholder="5.0"
                 min="0"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.fecalColiform')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.fecalColiform')}</label>
               <input
                 type="number"
                 name="fecal_coliform"
@@ -275,11 +344,11 @@ const Prediction = () => {
                 placeholder="20"
                 min="0"
                 step="1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.totalColiform')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.totalColiform')}</label>
               <input
                 type="number"
                 name="total_coliform"
@@ -288,21 +357,21 @@ const Prediction = () => {
                 placeholder="100"
                 min="0"
                 step="1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">{t('prediction.waterQuality.temperature')}</label>
+              <label className="block regular-14 text-primary-700 mb-1 font-medium">{t('prediction.waterQuality.temperature')}</label>
               <input
                 type="number"
                 name="temperature"
                 value={formData.temperature === '' ? '' : formData.temperature}
                 onChange={handleChange}
-                placeholder="25.0" 
-                min="0" 
-                max="50" 
+                placeholder="25.0"
+                min="0"
+                max="50"
                 step="0.1"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
               />
             </div>
           </div>
@@ -579,8 +648,105 @@ const Prediction = () => {
               <span className="font-semibold">📋 {t('prediction.results.summary')}:</span> {t('prediction.results.summaryText')}
             </p>
           </div>
+
+          {/* Alert Button for High Water Risk */}
+          {showAlertButton && (
+            <motion.div
+              className="mt-6 p-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="bold-16 text-red-700 mb-2">⚠️ {t('alert.highRiskDetected')}</h4>
+                  <p className="regular-14 text-red-600">
+                    {t('alert.waterQualityRisk')} {getRegionName(formData.Northeast_State)}. {t('alert.recommendAlert')}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  title={t('alert.sendAlert')}
+                  variant="btn_danger"
+                  onClick={() => setShowAlertConfirm(true)}
+                />
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       )}
+
+      {/* Alert Confirmation Modal */}
+      <AnimatePresence>
+        {showAlertConfirm && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-lg p-6 w-full max-w-md"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <h3 className="bold-20 text-gray-90 mb-4">{t('alert.confirmTitle')}</h3>
+              <p className="regular-16 text-gray-70 mb-6">
+                {t('alert.confirmMessage')} <span className="font-semibold text-red-600">{getRegionName(formData.Northeast_State)}</span>?
+              </p>
+
+              <div className="flex gap-4">
+                <Button
+                  type="button"
+                  title={sendingAlert ? t('alert.sending') : t('alert.confirmSend')}
+                  variant="btn_danger"
+                  onClick={handleSendAlert}
+                  disabled={sendingAlert}
+                />
+                <Button
+                  type="button"
+                  title={t('alert.cancel')}
+                  variant="btn_secondary"
+                  onClick={() => setShowAlertConfirm(false)}
+                  disabled={sendingAlert}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Alert Success Modal */}
+      <AnimatePresence>
+        {alertSent && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-lg p-6 w-full max-w-md text-center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <div className="mb-4">
+                <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="bold-20 text-gray-90 mb-2">{t('alert.successTitle')}</h3>
+                <p className="regular-16 text-gray-70">
+                  {t('alert.successMessage')} {getRegionName(formData.Northeast_State)}.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -69,35 +69,35 @@ const RecordBook = () => {
   }, [searchTerm, records])
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="bold-24 text-gray-90 mb-4">{t('recordBook.title')}</h2>
+    <div className="bg-gradient-to-br from-primary-50 via-white to-primary-100 rounded-2xl shadow-lg p-6 border border-primary-200">
+      <h2 className="bold-24 text-primary-700 mb-4">{t('recordBook.title')}</h2>
       <div className="mb-4 flex flex-col sm:flex-row gap-4">
         <input
           type="text"
           placeholder={t('recordBook.searchPlaceholder')}
-          className="flex-1 px-4 py-3 bg-gray-10 rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="flex-1 px-4 py-3 bg-white rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all hover:shadow-md"
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div className="text-sm text-gray-600 flex items-center">
+        <div className="text-sm text-primary-600 font-medium bg-primary-50 px-3 py-2 rounded-lg inline-block">
           {t('recordBook.showing')} {filteredRecords.length} {t('recordBook.of')} {records.length} {t('recordBook.records')}
         </div>
       </div>
       
-      <motion.div className="overflow-x-auto max-h-96 border border-gray-200 rounded-lg">
+      <motion.div className="overflow-x-auto max-h-96 border border-primary-200 rounded-lg bg-white shadow-sm">
         <table className="w-full text-left">
-          <thead className="bg-primary-50 sticky top-0">
+          <thead className="bg-gradient-to-r from-primary-50 to-primary-100 sticky top-0">
             <tr>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">ID</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.disease')}</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.state')}</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.district')}</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.cases')}</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.deaths')}</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.status')}</th>
-              <th className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">{t('recordBook.date')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">ID</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.disease')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.state')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.district')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.cases')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.deaths')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.status')}</th>
+              <th className="p-3 text-xs font-semibold text-primary-700 uppercase tracking-wider">{t('recordBook.date')}</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-primary-200">
             {filteredRecords.map((record, index) => (
               <tr key={record.ID || index} className="hover:bg-primary-50 transition-colors duration-200">
                 <td className="p-3 text-sm text-gray-900">{record.ID}</td>
@@ -144,8 +144,8 @@ const RecordBook = () => {
         </table>
         
         {filteredRecords.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            <p>{t('recordBook.noRecords')}</p>
+          <div className="text-center py-8 text-primary-600 bg-primary-50 rounded-lg">
+            <p className="font-medium">{t('recordBook.noRecords')}</p>
           </div>
         )}
       </motion.div>

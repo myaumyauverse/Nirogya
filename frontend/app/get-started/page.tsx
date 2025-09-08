@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Loader2, AlertCircle, CheckCircle, Volume2 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { usePatients } from '@/contexts/PatientContext'
 
 interface SpeechRecognition extends EventTarget {
   continuous: boolean
@@ -84,8 +85,11 @@ interface AnalysisResult {
 
 const GetStartedPage = () => {
   const { t } = useLanguage()
+  const { addPatient } = usePatients()
   const [formData, setFormData] = useState({
     name: '',
+    phone: '',
+    location: '',
     symptoms: ''
   })
 
@@ -214,8 +218,8 @@ const GetStartedPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.name.trim() || !formData.symptoms.trim()) {
-      alert('Please fill in both name and symptoms fields')
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.location.trim() || !formData.symptoms.trim()) {
+      alert('Please fill in all required fields')
       return
     }
 
@@ -230,6 +234,8 @@ const GetStartedPage = () => {
         },
         body: JSON.stringify({
           name: formData.name,
+          phone: formData.phone,
+          location: formData.location,
           symptoms: formData.symptoms,
           audio_input: isListening
         }),
@@ -241,6 +247,21 @@ const GetStartedPage = () => {
 
       const result: AnalysisResult = await response.json()
       setAnalysisResult(result)
+
+      // Save patient data to the patient management system
+      const patientData = {
+        name: formData.name,
+        phone: formData.phone,
+        age: 0, // Default age since not collected in get-started form
+        location: formData.location,
+        symptoms: formData.symptoms,
+        diseases: result.analysis?.predicted_diseases || [],
+        status: 'Active' as const,
+        notes: `Diagnosed via symptom analysis. Predicted disease: ${result.analysis?.most_likely_disease || 'Unknown'}`,
+        emergencyContact: ''
+      }
+
+      addPatient(patientData)
 
       // Results processed successfully - no speech output needed
 
@@ -297,6 +318,40 @@ const GetStartedPage = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder={t('getStarted.form.namePlaceholder')}
+                  className="w-full px-6 py-4 border-2 border-primary-200 rounded-xl focus:border-primary-400 focus:outline-none transition-colors regular-16 bg-gray-10"
+                  required
+                />
+              </div>
+
+              {/* Phone Number Field */}
+              <div>
+                <label htmlFor="phone" className="block bold-18 text-gray-90 mb-3">
+                  {t('getStarted.form.phone')}
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder={t('getStarted.form.phonePlaceholder')}
+                  className="w-full px-6 py-4 border-2 border-primary-200 rounded-xl focus:border-primary-400 focus:outline-none transition-colors regular-16 bg-gray-10"
+                  required
+                />
+              </div>
+
+              {/* Location Field */}
+              <div>
+                <label htmlFor="location" className="block bold-18 text-gray-90 mb-3">
+                  {t('getStarted.form.location')}
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder={t('getStarted.form.locationPlaceholder')}
                   className="w-full px-6 py-4 border-2 border-primary-200 rounded-xl focus:border-primary-400 focus:outline-none transition-colors regular-16 bg-gray-10"
                   required
                 />
