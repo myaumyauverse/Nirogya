@@ -9,7 +9,7 @@ import json
 def test_api():
     """Test the symptom analysis API"""
     
-    url = "http://localhost:8002/analyze-symptoms"
+    url = "http://localhost:8001/analyze-symptoms"
     data = {
         "name": "Test User",
         "symptoms": "stomach pain and diarrhea",

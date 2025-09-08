@@ -94,6 +94,7 @@ const GetStartedPage = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
   const [speechSupported, setSpeechSupported] = useState(false)
   const [transcript, setTranscript] = useState('')
+  const [speechError, setSpeechError] = useState<string | null>(null)
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
 
@@ -111,6 +112,7 @@ const GetStartedPage = () => {
 
         recognitionRef.current.onstart = () => {
           setIsListening(true)
+          setSpeechError(null) // Clear any previous errors when successfully starting
         }
 
         recognitionRef.current.onend = () => {
@@ -146,6 +148,34 @@ const GetStartedPage = () => {
         recognitionRef.current.onerror = (event) => {
           console.error('Speech recognition error:', event.error)
           setIsListening(false)
+
+          // Provide user-friendly error messages
+          let errorMessage = 'Speech recognition failed. '
+          switch (event.error) {
+            case 'network':
+              errorMessage += 'Please check your internet connection and try again.'
+              break
+            case 'not-allowed':
+              errorMessage += 'Microphone access was denied. Please allow microphone access and try again.'
+              break
+            case 'no-speech':
+              errorMessage += 'No speech was detected. Please try speaking again.'
+              break
+            case 'audio-capture':
+              errorMessage += 'Microphone not found or not working. Please check your microphone.'
+              break
+            case 'service-not-allowed':
+              errorMessage += 'Speech recognition service is not available.'
+              break
+            default:
+              errorMessage += 'Please try again.'
+          }
+
+          // Set error state to display in UI
+          setSpeechError(errorMessage)
+
+          // Clear error after 5 seconds
+          setTimeout(() => setSpeechError(null), 5000)
         }
       }
 
@@ -162,6 +192,7 @@ const GetStartedPage = () => {
 
   const startListening = () => {
     if (recognitionRef.current && speechSupported) {
+      setSpeechError(null) // Clear any previous errors
       recognitionRef.current.start()
     }
   }
@@ -192,7 +223,7 @@ const GetStartedPage = () => {
     setAnalysisResult(null)
 
     try {
-      const response = await fetch('http://localhost:8002/analyze-symptoms', {
+      const response = await fetch('http://localhost:8001/analyze-symptoms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -300,6 +331,8 @@ const GetStartedPage = () => {
                     <>
                       <p className="text-sm text-gray-70 mb-4">
                         Click the button below and speak your symptoms. Your speech will be converted to text automatically.
+                        <br />
+                        <span className="text-xs text-gray-60">Note: Voice input requires an internet connection to work.</span>
                       </p>
 
                       <div className="flex items-center gap-4 mb-4">
@@ -338,6 +371,15 @@ const GetStartedPage = () => {
                         <div className="p-3 bg-white rounded-lg border border-primary-200">
                           <p className="text-sm text-gray-60 mb-1">Live Transcription:</p>
                           <p className="text-primary-700 italic">"{transcript}"</p>
+                        </div>
+                      )}
+
+                      {speechError && (
+                        <div className="p-3 bg-red-50 rounded-lg border border-red-200 mt-3">
+                          <div className="flex items-center gap-2">
+                            <AlertCircle size={16} className="text-red-500 flex-shrink-0" />
+                            <p className="text-sm text-red-700">{speechError}</p>
+                          </div>
                         </div>
                       )}
                     </>

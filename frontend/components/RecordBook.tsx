@@ -97,7 +97,7 @@ const RecordBook = () => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredRecords.map((record, index) => (
-              <tr key={record.ID || index} className="hover:bg-gray-50 transition-colors">
+              <tr key={record.ID || index} className="hover:bg-primary-50 transition-colors duration-200">
                 <td className="p-3 text-sm text-gray-900">{record.ID}</td>
                 <td className="p-3 text-sm">
                   <div className="font-medium text-gray-900">{record.Disease_Illness}</div>

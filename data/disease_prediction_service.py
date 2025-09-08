@@ -71,13 +71,14 @@ class DiseasePredictor:
             # Find the latest model files (assuming timestamp format)
             model_files = [f for f in os.listdir(self.models_dir) if f.startswith('gradient_boosting_model_') and f.endswith('.pkl')]
             if not model_files:
-                raise FileNotFoundError("No gradient boosting model files found")
-            
+                print("⚠️ No gradient boosting model files found - using rule-based predictions")
+                return
+
             # Use the latest model (sorted by filename which includes timestamp)
             latest_model = sorted(model_files)[-1]
             # Extract timestamp from filename: gradient_boosting_model_YYYYMMDD_HHMMSS.pkl
             timestamp = latest_model.replace('gradient_boosting_model_', '').replace('.pkl', '')
-            
+
             # Load model
             model_path = os.path.join(self.models_dir, f"gradient_boosting_model_{timestamp}.pkl")
             self.model = joblib.load(model_path)
@@ -100,7 +101,11 @@ class DiseasePredictor:
             
         except Exception as e:
             print(f"❌ Error loading model: {str(e)}")
-            sys.exit(1)
+            print("⚠️ Model loading failed - predictions will use rule-based approach")
+            self.model = None
+            self.metadata = None
+            self.preprocessors = None
+            self.feature_names = None
     
     def validate_input_data(self, input_data):
         """

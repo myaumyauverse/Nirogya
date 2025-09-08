@@ -102,9 +102,14 @@ class IntegratedHealthAnalyzer:
         except Exception as e:
             print(f"⚠️ Warning: Could not load disease model - {str(e)}")
             print("   Disease predictions will use rule-based approach")
+            self.disease_predictor = None
     
     def calculate_wqi(self, water_params: Dict[str, float]) -> float:
-        """Calculate Water Quality Index using standardized formula"""
+        """
+        Calculate Water Quality Index using standardized formula
+        WQI Scale: 0-25 (Excellent), 26-50 (Good), 51-75 (Moderate), 76-100 (Poor), >100 (Very Poor)
+        Higher WQI = Worse water quality
+        """
         weights = {
             'ph': 0.15,
             'dissolved_oxygen': 0.20,
@@ -113,74 +118,110 @@ class IntegratedHealthAnalyzer:
             'fecal_coliform': 0.20,
             'total_coliform': 0.15
         }
-        
+
         wqi = 0
-        
+
         # pH scoring (optimal range: 6.5-8.5)
         ph_val = water_params.get('ph', 7.0)
         if 6.5 <= ph_val <= 8.5:
-            ph_score = 0
+            ph_score = 0  # Perfect pH
+        elif 6.0 <= ph_val < 6.5 or 8.5 < ph_val <= 9.0:
+            ph_score = 25  # Slightly out of range
+        elif 5.5 <= ph_val < 6.0 or 9.0 < ph_val <= 9.5:
+            ph_score = 50  # Moderately out of range
+        elif 5.0 <= ph_val < 5.5 or 9.5 < ph_val <= 10.0:
+            ph_score = 75  # Significantly out of range
         else:
-            ph_score = min(abs(ph_val - 7.0) * 15, 100)
+            ph_score = 100  # Extremely out of range
         wqi += weights['ph'] * ph_score
-        
+
         # Dissolved Oxygen scoring (higher is better, >5 mg/L is good)
         do_val = water_params.get('dissolved_oxygen', 5.0)
-        if do_val >= 5:
-            do_score = 0
+        if do_val >= 8:
+            do_score = 0  # Excellent
+        elif do_val >= 5:
+            do_score = 15  # Good
+        elif do_val >= 3:
+            do_score = 40  # Moderate
+        elif do_val >= 1:
+            do_score = 70  # Poor
         else:
-            do_score = (5 - do_val) * 20
-        wqi += weights['dissolved_oxygen'] * min(do_score, 100)
-        
+            do_score = 100  # Very poor
+        wqi += weights['dissolved_oxygen'] * do_score
+
         # BOD scoring (lower is better, <3 mg/L is good)
         bod_val = water_params.get('bod', 3.0)
-        if bod_val <= 3:
-            bod_score = 0
+        if bod_val <= 2:
+            bod_score = 0  # Excellent
+        elif bod_val <= 3:
+            bod_score = 15  # Good
+        elif bod_val <= 5:
+            bod_score = 40  # Moderate
+        elif bod_val <= 8:
+            bod_score = 70  # Poor
         else:
-            bod_score = (bod_val - 3) * 10
-        wqi += weights['bod'] * min(bod_score, 100)
-        
+            bod_score = 100  # Very poor
+        wqi += weights['bod'] * bod_score
+
         # Nitrate scoring (lower is better, <10 mg/L is good)
         nitrate_val = water_params.get('nitrate_n', 5.0)
-        if nitrate_val <= 10:
-            nitrate_score = nitrate_val * 2
+        if nitrate_val <= 5:
+            nitrate_score = 0  # Excellent
+        elif nitrate_val <= 10:
+            nitrate_score = 25  # Good
+        elif nitrate_val <= 15:
+            nitrate_score = 50  # Moderate
+        elif nitrate_val <= 20:
+            nitrate_score = 75  # Poor
         else:
-            nitrate_score = 20 + (nitrate_val - 10) * 8
-        wqi += weights['nitrate_n'] * min(nitrate_score, 100)
-        
+            nitrate_score = 100  # Very poor
+        wqi += weights['nitrate_n'] * nitrate_score
+
         # Fecal Coliform scoring (lower is better, <50 CFU/100mL is good)
         fc_val = water_params.get('fecal_coliform', 20.0)
-        if fc_val <= 50:
-            fc_score = fc_val * 0.5
+        if fc_val <= 10:
+            fc_score = 0  # Excellent
+        elif fc_val <= 50:
+            fc_score = 25  # Good
+        elif fc_val <= 100:
+            fc_score = 50  # Moderate
+        elif fc_val <= 200:
+            fc_score = 75  # Poor
         else:
-            fc_score = 25 + (fc_val - 50) * 0.1
-        wqi += weights['fecal_coliform'] * min(fc_score, 100)
-        
+            fc_score = 100  # Very poor
+        wqi += weights['fecal_coliform'] * fc_score
+
         # Total Coliform scoring (lower is better, <500 CFU/100mL is good)
         tc_val = water_params.get('total_coliform', 100.0)
-        if tc_val <= 500:
-            tc_score = tc_val * 0.05
+        if tc_val <= 100:
+            tc_score = 0  # Excellent
+        elif tc_val <= 500:
+            tc_score = 25  # Good
+        elif tc_val <= 1000:
+            tc_score = 50  # Moderate
+        elif tc_val <= 2000:
+            tc_score = 75  # Poor
         else:
-            tc_score = 25 + (tc_val - 500) * 0.01
-        wqi += weights['total_coliform'] * min(tc_score, 100)
-        
-        return wqi
+            tc_score = 100  # Very poor
+        wqi += weights['total_coliform'] * tc_score
+
+        return round(wqi, 2)
     
     def assess_water_quality_risk(self, water_params: Dict[str, float]) -> Dict[str, any]:
         """Assess water quality and categorize risk factors"""
         wqi = self.calculate_wqi(water_params)
-        
-        # Categorize overall water quality
-        if wqi <= 25:
+
+        # Categorize overall water quality (more responsive to changes)
+        if wqi <= 15:
             quality_category = "Excellent"
-            quality_risk = "Low"
-        elif wqi <= 50:
+            quality_risk = "Very Low"
+        elif wqi <= 30:
             quality_category = "Good"
             quality_risk = "Low"
-        elif wqi <= 75:
+        elif wqi <= 50:
             quality_category = "Moderate"
             quality_risk = "Medium"
-        elif wqi <= 100:
+        elif wqi <= 70:
             quality_category = "Poor"
             quality_risk = "High"
         else:
@@ -381,40 +422,7 @@ class IntegratedHealthAnalyzer:
                 return {
                     'predicted_cases': scaled_predicted_cases,
                     'confidence': result.get('confidence', 'Medium'),
-                    'most_likely_disease': disease_prediction.get('most_likely', 'Unknown'),
-                    'disease_probability': disease_prediction.get('probability', 60),
-                    'method': 'ML_Model_Scaled'
-                }
-            except Exception as e:
-                print(f"⚠️ ML prediction failed: {e}")
-        
-        # Fallback to rule-based prediction
-        return self._rule_based_disease_prediction(outbreak_data)
-        """Predict disease using the ML model or rule-based approach"""
-        actual_cases = outbreak_data.get('No_of_Cases', 0)
-        
-        if self.disease_predictor:
-            # Convert cases to deaths for ML model (typical mortality rate 2-5%)
-            # This allows us to use the trained model that expects deaths
-            estimated_deaths = max(1, int(actual_cases * 0.03))  # 3% mortality rate
-            
-            # Create ML model input with deaths parameter
-            ml_input = outbreak_data.copy()
-            ml_input['No_of_Deaths'] = estimated_deaths
-            
-            try:
-                # Use ML model prediction
-                result = self.disease_predictor.predict_single(ml_input)
-                disease_prediction = self.disease_predictor.predict_disease_type(ml_input)
-                
-                # Scale predicted cases from ML model to match our input scale
-                ml_predicted_cases = result.get('predicted_cases', 0)
-                scaled_predicted_cases = max(actual_cases, ml_predicted_cases * 20)  # Scale up from deaths model
-                
-                return {
-                    'predicted_cases': scaled_predicted_cases,
-                    'confidence': result.get('confidence', 'Medium'),
-                    'most_likely_disease': disease_prediction.get('most_likely', 'Unknown'),
+                    'most_likely_disease': disease_prediction.get('predicted_disease', 'Unknown'),
                     'disease_probability': disease_prediction.get('probability', 60),
                     'method': 'ML_Model_Scaled'
                 }

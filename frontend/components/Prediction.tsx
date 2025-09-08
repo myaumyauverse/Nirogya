@@ -49,8 +49,21 @@ interface DiseaseCorrelationAnalysis {
   analysis_timestamp: string
 }
 
+interface FormData {
+  No_of_Cases: number | string
+  Northeast_State: number
+  Start_of_Outbreak_Month: number
+  ph: number | string
+  dissolved_oxygen: number | string
+  bod: number | string
+  nitrate_n: number | string
+  fecal_coliform: number | string
+  total_coliform: number | string
+  temperature: number | string
+}
+
 const Prediction = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     No_of_Cases: 150,
     Northeast_State: 2,
     Start_of_Outbreak_Month: 7,
@@ -67,7 +80,19 @@ const Prediction = () => {
   const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: parseFloat(e.target.value) })
+    const { name, value } = e.target
+
+    // Handle empty values or invalid numbers
+    if (value === '') {
+      setFormData({ ...formData, [name]: '' })
+    } else {
+      const numericValue = parseFloat(value)
+      // Only update if the parsed value is a valid number
+      if (!isNaN(numericValue)) {
+        setFormData({ ...formData, [name]: numericValue })
+      }
+      // If it's NaN, don't update the state (keep the previous valid value)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,20 +101,21 @@ const Prediction = () => {
     setError(null)
     setAnalysis(null)
 
+    // Convert string values to numbers, using default values for empty strings
     const requestData = {
       outbreak_data: {
-        No_of_Cases: formData.No_of_Cases,
+        No_of_Cases: typeof formData.No_of_Cases === 'string' && formData.No_of_Cases === '' ? 150 : Number(formData.No_of_Cases),
         Northeast_State: formData.Northeast_State,
         Start_of_Outbreak_Month: formData.Start_of_Outbreak_Month,
       },
       water_params: {
-        ph: formData.ph,
-        dissolved_oxygen: formData.dissolved_oxygen,
-        bod: formData.bod,
-        nitrate_n: formData.nitrate_n,
-        fecal_coliform: formData.fecal_coliform,
-        total_coliform: formData.total_coliform,
-        temperature: formData.temperature,
+        ph: typeof formData.ph === 'string' && formData.ph === '' ? 8.5 : Number(formData.ph),
+        dissolved_oxygen: typeof formData.dissolved_oxygen === 'string' && formData.dissolved_oxygen === '' ? 3.0 : Number(formData.dissolved_oxygen),
+        bod: typeof formData.bod === 'string' && formData.bod === '' ? 5.0 : Number(formData.bod),
+        nitrate_n: typeof formData.nitrate_n === 'string' && formData.nitrate_n === '' ? 12.0 : Number(formData.nitrate_n),
+        fecal_coliform: typeof formData.fecal_coliform === 'string' && formData.fecal_coliform === '' ? 80.0 : Number(formData.fecal_coliform),
+        total_coliform: typeof formData.total_coliform === 'string' && formData.total_coliform === '' ? 450.0 : Number(formData.total_coliform),
+        temperature: typeof formData.temperature === 'string' && formData.temperature === '' ? 28.0 : Number(formData.temperature),
       },
       include_future: true,
       months_ahead: 3,
@@ -127,14 +153,14 @@ const Prediction = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block regular-14 text-gray-70 mb-1">Number of Cases</label>
-              <input 
-                type="number" 
-                name="No_of_Cases" 
-                value={formData.No_of_Cases} 
-                onChange={handleChange} 
-                placeholder="150" 
+              <input
+                type="number"
+                name="No_of_Cases"
+                value={formData.No_of_Cases === '' ? '' : formData.No_of_Cases}
+                onChange={handleChange}
+                placeholder="150"
                 min="0"
-                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
@@ -185,15 +211,15 @@ const Prediction = () => {
           <h3 className="bold-18 text-gray-90 mb-3">💧 Water Quality Parameters</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block regular-14 text-gray-70 mb-1">pH Level (6.0-9.5)</label>
-              <input 
-                type="number" 
-                name="ph" 
-                value={formData.ph} 
-                onChange={handleChange} 
-                placeholder="7.0" 
-                min="6.0" 
-                max="9.5" 
+              <label className="block regular-14 text-gray-70 mb-1">pH Level (0.0-14.0)</label>
+              <input
+                type="number"
+                name="ph"
+                value={formData.ph === '' ? '' : formData.ph}
+                onChange={handleChange}
+                placeholder="7.0"
+                min="0.0"
+                max="14.0"
                 step="0.1"
                 className="w-full px-4 py-3 bg-white rounded-lg border border-gray-20 focus:outline-none focus:ring-2 focus:ring-primary-500" 
               />
@@ -203,7 +229,7 @@ const Prediction = () => {
               <input 
                 type="number" 
                 name="dissolved_oxygen" 
-                value={formData.dissolved_oxygen} 
+                value={formData.dissolved_oxygen === '' ? '' : formData.dissolved_oxygen}
                 onChange={handleChange} 
                 placeholder="5.0" 
                 min="0" 
@@ -216,7 +242,7 @@ const Prediction = () => {
               <input 
                 type="number" 
                 name="bod" 
-                value={formData.bod} 
+                value={formData.bod === '' ? '' : formData.bod}
                 onChange={handleChange} 
                 placeholder="3.0" 
                 min="0" 
@@ -229,7 +255,7 @@ const Prediction = () => {
               <input 
                 type="number" 
                 name="nitrate_n" 
-                value={formData.nitrate_n} 
+                value={formData.nitrate_n === '' ? '' : formData.nitrate_n}
                 onChange={handleChange} 
                 placeholder="5.0" 
                 min="0" 
@@ -242,7 +268,7 @@ const Prediction = () => {
               <input 
                 type="number" 
                 name="fecal_coliform" 
-                value={formData.fecal_coliform} 
+                value={formData.fecal_coliform === '' ? '' : formData.fecal_coliform}
                 onChange={handleChange} 
                 placeholder="20" 
                 min="0" 
@@ -255,7 +281,7 @@ const Prediction = () => {
               <input 
                 type="number" 
                 name="total_coliform" 
-                value={formData.total_coliform} 
+                value={formData.total_coliform === '' ? '' : formData.total_coliform}
                 onChange={handleChange} 
                 placeholder="100" 
                 min="0" 
@@ -268,7 +294,7 @@ const Prediction = () => {
               <input 
                 type="number" 
                 name="temperature" 
-                value={formData.temperature} 
+                value={formData.temperature === '' ? '' : formData.temperature}
                 onChange={handleChange} 
                 placeholder="25.0" 
                 min="0" 
@@ -319,22 +345,26 @@ const Prediction = () => {
           {/* Disease Prediction Section */}
           <div className="bg-primary-50 p-6 rounded-lg">
             <h3 className="bold-18 text-gray-90 mb-4">🦠 Disease Prediction Analysis</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white p-4 rounded-lg">
-                <h4 className="regular-14 text-gray-70 mb-1">Most Likely Disease</h4>
-                <p className="bold-16 text-primary-500">{analysis.disease_prediction.most_likely_disease}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Main Disease Card - Larger */}
+              <div className="lg:col-span-2">
+                <div className="bg-white p-6 rounded-lg h-full flex flex-col justify-center">
+                  <h4 className="regular-14 text-gray-70 mb-2">Most Likely Disease</h4>
+                  <p className="bold-24 text-primary-500 mb-2">{analysis.disease_prediction.most_likely_disease}</p>
+                  <p className="regular-12 text-gray-60">Based on outbreak data and water quality analysis</p>
+                </div>
               </div>
-              <div className="bg-white p-4 rounded-lg">
-                <h4 className="regular-14 text-gray-70 mb-1">Predicted Cases</h4>
-                <p className="bold-16 text-orange-500">{Math.round(analysis.disease_prediction.predicted_cases)}</p>
-              </div>
-              <div className="bg-white p-4 rounded-lg">
-                <h4 className="regular-14 text-gray-70 mb-1">Confidence Level</h4>
-                <p className="bold-16 text-blue-500">{analysis.disease_prediction.confidence}</p>
-              </div>
-              <div className="bg-white p-4 rounded-lg">
-                <h4 className="regular-14 text-gray-70 mb-1">Probability</h4>
-                <p className="bold-16 text-purple-500">{analysis.disease_prediction.disease_probability}%</p>
+
+              {/* Secondary Info Cards - Smaller, Stacked */}
+              <div className="space-y-4">
+                <div className="bg-white p-4 rounded-lg">
+                  <h4 className="regular-12 text-gray-70 mb-1">Confidence Level</h4>
+                  <p className="bold-18 text-blue-500">{analysis.disease_prediction.confidence}</p>
+                </div>
+                <div className="bg-white p-4 rounded-lg">
+                  <h4 className="regular-12 text-gray-70 mb-1">Probability</h4>
+                  <p className="bold-18 text-purple-500">{analysis.disease_prediction.disease_probability}%</p>
+                </div>
               </div>
             </div>
           </div>
@@ -354,10 +384,12 @@ const Prediction = () => {
               <div className="bg-white p-4 rounded-lg">
                 <h4 className="regular-14 text-gray-70 mb-1">Risk Level</h4>
                 <p className={`bold-16 ${
-                  analysis.water_assessment.quality_risk === 'Very High' ? 'text-red-500' :
+                  analysis.water_assessment.quality_risk === 'Very High' ? 'text-red-600' :
                   analysis.water_assessment.quality_risk === 'High' ? 'text-orange-500' :
                   analysis.water_assessment.quality_risk === 'Medium' ? 'text-yellow-500' :
-                  'text-green-500'
+                  analysis.water_assessment.quality_risk === 'Low' ? 'text-green-500' :
+                  analysis.water_assessment.quality_risk === 'Very Low' ? 'text-green-600' :
+                  'text-gray-500'
                 }`}>{analysis.water_assessment.quality_risk}</p>
               </div>
             </div>
@@ -419,7 +451,7 @@ const Prediction = () => {
           </div>
 
           {/* Risk Assessment Breakdown */}
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="bg-primary-50 p-6 rounded-lg">
             <h3 className="bold-18 text-gray-90 mb-4">📊 Risk Assessment Breakdown</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-4 rounded-lg">
