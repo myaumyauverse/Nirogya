@@ -1,0 +1,41 @@
+{
+  "diseases": [
+    {
+      "name": "sample_waterborne_disease",
+      "description": "This is a sample waterborne disease for testing import functionality",
+      "transmission": "Contaminated water and poor sanitation",
+      "severity": "Moderate to severe",
+      "treatment": "Antibiotics and supportive care",
+      "prevention": "Safe drinking water and good hygiene",
+      "region_specific_info": "Common during monsoon season in Northeast India",
+      "symptoms": [
+        "sample diarrhea",
+        "sample fever",
+        "sample dehydration",
+        "sample nausea"
+      ]
+    },
+    {
+      "name": "example_viral_infection",
+      "description": "Example viral infection for demonstration",
+      "transmission": "Contaminated food and water",
+      "severity": "Mild to moderate",
+      "treatment": "Supportive care and rest",
+      "prevention": "Vaccination and hygiene",
+      "region_specific_info": "More common in rural areas of Northeast India",
+      "symptoms": [
+        "example fatigue",
+        "example headache",
+        "example muscle pain"
+      ]
+    }
+  ],
+  "synonyms": {
+    "loose motions": "diarrhea",
+    "pet kharab": "stomach upset",
+    "bukhar": "fever",
+    "kamjori": "weakness"
+  },
+  "created_date": "2025-09-05T01:09:38.845072",
+  "description": "Sample import file created for testing purposes"
+}

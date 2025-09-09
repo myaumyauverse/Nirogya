@@ -1,0 +1,120 @@
+# Nirogya - Waterborne Disease Prediction System
+# ===============================================
+# Complete requirements file for backend, data analysis, and API services
+# 
+# Installation: pip install -r requirements.txt
+# 
+# This file includes all dependencies needed for:
+# - Disease prediction ML models
+# - Water quality assessment
+# - Correlation analysis
+# - Flask and FastAPI servers
+# - AI chatbot functionality
+# - Data processing and analysis
+
+# ===== CORE WEB FRAMEWORKS =====
+# Flask for correlation API and main backend services
+flask==2.3.3
+flask-cors==4.0.0
+
+# FastAPI for enhanced API services (optional but recommended)
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+python-multipart==0.0.6
+starlette==0.27.0
+
+# ===== MACHINE LEARNING & DATA SCIENCE =====
+# Core ML and data processing libraries
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.2
+
+# Model persistence and utilities
+joblib==1.3.2
+
+# Additional ML utilities
+scipy==1.11.4
+
+# ===== DATA PROCESSING & ANALYSIS =====
+# Date and time utilities
+python-dateutil==2.8.2
+
+# Type hints and extensions
+typing-extensions==4.8.0
+
+# ===== AI CHATBOT DEPENDENCIES =====
+# Text processing for chatbot functionality
+# (sklearn already included above for TfidfVectorizer and cosine_similarity)
+
+# ===== DATABASE & STORAGE =====
+# SQLite support (built into Python, but explicit for clarity)
+# sqlite3 is built-in, no separate package needed
+
+# ===== HTTP & API UTILITIES =====
+# HTTP client for API calls
+requests==2.31.0
+
+# Async HTTP client for news ticker service
+aiohttp==3.9.1
+setuptools==80.9.0
+
+# Environment variable management
+python-dotenv==1.0.0
+
+# CORS handling (already included with flask-cors)
+# Cross-origin resource sharing support
+
+# ===== DEVELOPMENT & UTILITIES =====
+# Warnings and logging (built-in modules)
+# argparse (built-in)
+# json (built-in)
+# os, sys (built-in)
+# datetime (built-in)
+# re (built-in)
+
+# ===== OPTIONAL ENHANCEMENTS =====
+# For enhanced text processing (if needed)
+nltk==3.8.1
+
+# For development and testing (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# ===== COMPATIBILITY NOTES =====
+# This requirements.txt is designed for Python 3.8+
+# Tested on Python 3.11
+# 
+# Key compatibility considerations:
+# - numpy<2.0 to ensure scikit-learn compatibility
+# - pandas 2.0+ for better performance
+# - scikit-learn 1.3+ for latest ML features
+# - flask 2.3+ for security updates
+# 
+# ===== INSTALLATION INSTRUCTIONS =====
+# 1. Create virtual environment (recommended):
+#    python -m venv venv
+#    source venv/bin/activate  # On Windows: venv\Scripts\activate
+# 
+# 2. Install dependencies:
+#    pip install -r requirements.txt
+# 
+# 3. Verify installation:
+#    python -c "import flask, pandas, sklearn, numpy; print('All dependencies installed successfully!')"
+# 
+# ===== SERVICES THAT WILL WORK =====
+# After installing these requirements, you can run:
+# - python data/correlation_api.py (Main Flask API server)
+# - python backend/api_server.py (FastAPI server)
+# - python data/disease_prediction_service.py (ML prediction service)
+# - python data/interactive_analysis.py (Interactive analysis tool)
+# - python "AI chatbot/chatbot.py" (AI chatbot functionality)
+# - All data analysis and water quality assessment scripts
+# 
+# ===== TROUBLESHOOTING =====
+# If you encounter issues:
+# 1. Ensure Python 3.8+ is installed
+# 2. Update pip: pip install --upgrade pip
+# 3. Clear pip cache: pip cache purge
+# 4. Install in clean virtual environment
+# 5. Check for system-specific dependencies (especially on Windows)

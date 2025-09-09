@@ -1,0 +1,22 @@
+{
+  "diseases": [
+    {
+      "name": "sample_waterborne_disease",
+      "description": "This is a sample waterborne disease for testing import functionality",
+      "transmission": "Contaminated water and poor sanitation",
+      "severity": "Moderate to severe",
+      "treatment": "Antibiotics and supportive care",
+      "prevention": "Safe drinking water and good hygiene",
+      "region_specific_info": "Common during monsoon season in Northeast India",
+      "symptoms": [
+        "sample diarrhea",
+        "sample fever",
+        "sample dehydration",
+        "sample nausea"
+      ]
+    }
+  ],
+  "synonyms": {
+    "sample term": "original term"
+  }
+}

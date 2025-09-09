@@ -1,0 +1,21 @@
+{
+  "name": "regional-language-chatbot-frontend",
+  "version": "1.0.0",
+  "description": "Frontend dependencies for Regional Language Chatbot",
+  "dependencies": {
+    "lucide-react": "^0.294.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "next": "^14.0.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0"
+  },
+  "installation_notes": {
+    "note": "Install this in your existing Next.js project",
+    "command": "npm install lucide-react",
+    "description": "This package only contains the additional dependency needed for the enhanced chatbot interface"
+  }
+}
