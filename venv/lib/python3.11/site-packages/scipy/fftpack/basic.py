@@ -2,7 +2,8 @@
 # Use the `scipy.fftpack` namespace for importing the functions
 # included below.
 
-from scipy._lib.deprecation import _sub_module_deprecation
+import warnings
+from . import _basic
 
 __all__ = [  # noqa: F822
     'fft','ifft','fftn','ifftn','rfft','irfft',
@@ -15,6 +16,13 @@ def __dir__():
 
 
 def __getattr__(name):
-    return _sub_module_deprecation(sub_package="fftpack", module="basic",
-                                   private_modules=["_basic"], all=__all__,
-                                   attribute=name)
+    if name not in __all__:
+        raise AttributeError(
+            "scipy.fftpack.basic is deprecated and has no attribute "
+            f"{name}. Try looking in scipy.fftpack instead.")
+
+    warnings.warn(f"Please use `{name}` from the `scipy.fftpack` namespace, "
+                  "the `scipy.fftpack.basic` namespace is deprecated.",
+                  category=DeprecationWarning, stacklevel=2)
+
+    return getattr(_basic, name)

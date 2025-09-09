@@ -4,6 +4,7 @@ import React from 'react'
 import Prediction from '@/components/Prediction'
 import RecordBook from '@/components/RecordBook'
 import PatientManagement from '@/components/PatientManagement'
+import ZoomMeetingManager from '@/components/ZoomMeetingManager'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { motion } from 'framer-motion'
@@ -37,6 +38,9 @@ const DoctorDashboardPage = () => {
         <div className="space-y-8">
           {/* Patient Management - Full Width */}
           <PatientManagement />
+
+          {/* Zoom Meeting Manager - Full Width */}
+          <ZoomMeetingManager />
 
           {/* Prediction and RecordBook - Side by Side */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">

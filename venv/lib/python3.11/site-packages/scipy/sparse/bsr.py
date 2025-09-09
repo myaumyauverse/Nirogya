@@ -2,7 +2,8 @@
 # Use the `scipy.sparse` namespace for importing the functions
 # included below.
 
-from scipy._lib.deprecation import _sub_module_deprecation
+import warnings
+from . import _bsr
 
 
 __all__ = [  # noqa: F822
@@ -15,9 +16,11 @@ __all__ = [  # noqa: F822
     'bsr_transpose',
     'check_shape',
     'csr_matmat_maxnnz',
+    'get_index_dtype',
     'getdata',
     'getdtype',
     'isshape',
+    'isspmatrix',
     'isspmatrix_bsr',
     'spmatrix',
     'to_native',
@@ -31,6 +34,13 @@ def __dir__():
 
 
 def __getattr__(name):
-    return _sub_module_deprecation(sub_package="sparse", module="bsr",
-                                   private_modules=["_bsr"], all=__all__,
-                                   attribute=name)
+    if name not in __all__:
+        raise AttributeError(
+            "scipy.sparse.bsr is deprecated and has no attribute "
+            f"{name}. Try looking in scipy.sparse instead.")
+
+    warnings.warn(f"Please use `{name}` from the `scipy.sparse` namespace, "
+                  "the `scipy.sparse.bsr` namespace is deprecated.",
+                  category=DeprecationWarning, stacklevel=2)
+
+    return getattr(_bsr, name)

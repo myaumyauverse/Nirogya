@@ -2,8 +2,8 @@
 # Use the `scipy.linalg` namespace for importing the functions
 # included below.
 
-from scipy._lib.deprecation import _sub_module_deprecation
-
+import warnings
+from . import _misc
 
 __all__ = [  # noqa: F822
     'LinAlgError', 'LinAlgWarning', 'norm', 'get_blas_funcs',
@@ -16,6 +16,13 @@ def __dir__():
 
 
 def __getattr__(name):
-    return _sub_module_deprecation(sub_package="linalg", module="misc",
-                                   private_modules=["_misc"], all=__all__,
-                                   attribute=name)
+    if name not in __all__:
+        raise AttributeError(
+            "scipy.linalg.misc is deprecated and has no attribute "
+            f"{name}. Try looking in scipy.linalg instead.")
+
+    warnings.warn(f"Please use `{name}` from the `scipy.linalg` namespace, "
+                  "the `scipy.linalg.misc` namespace is deprecated.",
+                  category=DeprecationWarning, stacklevel=2)
+
+    return getattr(_misc, name)

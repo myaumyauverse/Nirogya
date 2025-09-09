@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { motion } from 'framer-motion'
 import Button from "./Button"
 import LanguageToggle from "./LanguageToggle"
+import PHCAppointmentRequest from "./PHCAppointmentRequest"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAuth } from "@/contexts/AuthContext"
 
@@ -73,6 +74,9 @@ const Navbar = () => {
 
         <div className="lg:flexCenter hidden gap-4">
           <LanguageToggle />
+          {!isDashboard && !isAuthenticated && (
+            <PHCAppointmentRequest />
+          )}
           {isDashboard && isAuthenticated ? (
             <Button
               type="button"

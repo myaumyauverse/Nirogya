@@ -2,7 +2,8 @@
 # Use the `scipy.fftpack` namespace for importing the functions
 # included below.
 
-from scipy._lib.deprecation import _sub_module_deprecation
+import warnings
+from . import _helper
 
 __all__ = [  # noqa: F822
     'fftshift', 'ifftshift', 'fftfreq', 'rfftfreq', 'next_fast_len'
@@ -14,6 +15,13 @@ def __dir__():
 
 
 def __getattr__(name):
-    return _sub_module_deprecation(sub_package="fftpack", module="helper",
-                                   private_modules=["_helper"], all=__all__,
-                                   attribute=name)
+    if name not in __all__:
+        raise AttributeError(
+            "scipy.fftpack.helper is deprecated and has no attribute "
+            f"{name}. Try looking in scipy.fftpack instead.")
+
+    warnings.warn(f"Please use `{name}` from the `scipy.fftpack` namespace, "
+                  "the `scipy.fftpack.helper` namespace is deprecated.",
+                  category=DeprecationWarning, stacklevel=2)
+
+    return getattr(_helper, name)

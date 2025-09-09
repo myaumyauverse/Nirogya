@@ -31,51 +31,78 @@ const NewsTicker: React.FC = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const updateIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Fetch alerts from API
+  // Load demo alerts (API endpoint not implemented yet)
   const fetchAlerts = async () => {
     try {
-      console.log('Fetching news ticker alerts...')
-      const response = await fetch('/api/news-ticker')
+      console.log('Loading news ticker alerts...')
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
+      // For now, use demo data since API endpoint is not implemented
+      // In production, this would fetch from a real news/alerts API
+      const demoAlerts: Alert[] = [
+        {
+          id: 'demo_1',
+          text: '🚨 Water quality alert: High contamination detected in Guwahati region - Boil water before consumption',
+          severity: 'high' as const,
+          region: 'Assam',
+          source: 'Nirogya Health System',
+          timestamp: new Date().toISOString(),
+          type: 'water_quality' as const
+        },
+        {
+          id: 'demo_2',
+          text: '📊 Disease outbreak monitoring: 15 new cases of waterborne illness reported in Imphal',
+          severity: 'medium' as const,
+          region: 'Manipur',
+          source: 'Public Health Department',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+          type: 'disease_outbreak' as const
+        },
+        {
+          id: 'demo_3',
+          text: '✅ Water treatment plant in Shillong restored to full capacity - Water quality improving',
+          severity: 'low' as const,
+          region: 'Meghalaya',
+          source: 'Water Authority',
+          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+          type: 'water_quality' as const
+        },
+        {
+          id: 'demo_4',
+          text: '🔬 Weekly water quality report: 85% of tested sources meet safety standards across Northeast',
+          severity: 'low' as const,
+          region: 'Northeast India',
+          source: 'Nirogya System',
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
+          type: 'advisory' as const
+        },
+        {
+          id: 'demo_5',
+          text: '⚠️ Monsoon season advisory: Increased risk of waterborne diseases - Take preventive measures',
+          severity: 'medium' as const,
+          region: 'Northeast India',
+          source: 'Health Ministry',
+          timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+          type: 'advisory' as const
+        }
+      ]
 
-      const data: NewsTickerData = await response.json()
-      console.log('News ticker data received:', data)
-
-      if (data.success && data.alerts.length > 0) {
-        setAlerts(data.alerts)
-        setLastUpdated(data.last_updated)
-        console.log(`Loaded ${data.alerts.length} alerts`)
-      } else {
-        console.warn('No alerts received, using fallback')
-        // Fallback alerts if no data available
-        setAlerts([
-          {
-            id: 'fallback_1',
-            text: 'Water quality monitoring active across Northeast India – Stay informed!',
-            severity: 'low',
-            region: 'Northeast India',
-            source: 'Nirogya System',
-            timestamp: new Date().toISOString(),
-            type: 'advisory'
-          }
-        ])
-      }
+      setAlerts(demoAlerts)
+      setLastUpdated(new Date().toISOString())
+      console.log(`Loaded ${demoAlerts.length} demo alerts`)
       setIsLoading(false)
+
     } catch (error) {
-      console.error('Error fetching news ticker alerts:', error)
-      // Set fallback data on error
+      console.error('Error loading news ticker alerts:', error)
+      // Set minimal fallback data on error
       setAlerts([
         {
           id: 'error_fallback',
           text: 'Nirogya system monitoring water quality and disease outbreaks – Stay safe!',
-          severity: 'low',
+          severity: 'low' as const,
           region: 'Northeast India',
           source: 'Nirogya System',
           timestamp: new Date().toISOString(),
-          type: 'advisory'
+          type: 'advisory' as const
         }
       ])
       setIsLoading(false)
